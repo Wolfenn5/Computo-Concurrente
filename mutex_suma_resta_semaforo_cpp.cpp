@@ -6,7 +6,8 @@
 
 #include <semaphore> // biblioteca de semaforos pero de c++ version 20
 
-//asi que se compila g++ nombre.cpp -o nombre -std=c++20
+//asi que se compila             --> g++ nombre.cpp -o nombre -std=c++20
+// o por ejemplo en mac          --> clang++ -std=c++11 -pthread
 
 
 
