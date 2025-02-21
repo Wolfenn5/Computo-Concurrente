@@ -1,3 +1,5 @@
 # Ignorar ejecutables
 *. exe
 
+# Ignora todos los archivos sin extension (ejecutables desde linux)
+*
