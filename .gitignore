@@ -1,5 +1,10 @@
-# Ignorar ejecutables
-*. exe
-
-# Ignora todos los archivos sin extension (ejecutables desde linux)
+# Ignorar todo
 *
+
+# Excepto archivos C y C++
+!*.c
+!*.h
+!*.cpp
+!*.hpp
+!*.cc
+!*.cxx
