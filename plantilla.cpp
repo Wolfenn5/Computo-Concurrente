@@ -1,5 +1,5 @@
 // Otra forma de compilar      --> g++ nombre.cpp -o nombre -std=c++20
-// Compilar en mac             --> clang++ -std=c++11 -pthread
+// Compilar en mac             --> clang++ -std=c++11 -lpthread nombre.cpp -o nombre  solo clang si es en c
 
 /* -------------- C -------------- */
 #include <stdio.h>
