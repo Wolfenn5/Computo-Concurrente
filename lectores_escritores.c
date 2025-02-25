@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <semaphore.h>
-#include <unistd.h>
+#include <pthread.h> // para hilos como pthread_Create y pthread_join
+#include <stdlib.h> // para atoi para argumentos del main
+#include <semaphore.h> // para semaforos sem_wait sem_post
+#include <unistd.h> // para sleep
 
 /* El programa se ejecutara siempre por la condicion de los whiles con el fin de ver como cambian los lectores y escritores con cada ejecucion*/
 
@@ -86,7 +86,8 @@ int main(int argc,char const *argv[])
         pthread_create(&hilos_lectores[i],NULL,lector,(void *)&ids_lectores[i]); // argumentos: hilo, NULL, funcion a hacer, id del hilo lector
     }
     // Escritores
-    for(int i=0;i<num_escritores;i++) {
+    for(int i=0;i<num_escritores;i++) 
+    {
         ids_escritores[i]=i+1;
         pthread_create(&hilos_escritores[i],NULL,escritor,(void *)&ids_escritores[i]); // argumentos: hilo, NULL, funcion a hacer, id del hilo escritor
     }
@@ -95,11 +96,13 @@ int main(int argc,char const *argv[])
 
     // Esperar a que los hilos terminen
     // Lectores
-    for(int i=0;i<num_lectores;i++) {
+    for(int i=0;i<num_lectores;i++) 
+    {
         pthread_join(hilos_lectores[i],NULL); // argumentos: hilo, NULL
     }
     // Escritores
-    for(int i=0;i<num_escritores;i++) {
+    for(int i=0;i<num_escritores;i++) 
+    {
         pthread_join(hilos_escritores[i],NULL); // argumentos: hilo, NULL
     }
 
