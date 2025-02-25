@@ -11,7 +11,7 @@ int libro= 0; // el contenido del libro solo tendra el id del escritor que escri
 
 // Declaracion de mutex y semaforo
 pthread_mutex_t mutex; // mutex para proteger a los escritores
-sem_t semaforo; // controla el acceso exclusivo al libro
+sem_t semaforo; // semaforo para dar paso/acceso al libro
 
 
 void *lector(void *arg) 
@@ -46,11 +46,11 @@ void *escritor(void *arg)
 
 
         printf("Ya termine de escribir\n");
-        sleep(2); // se simula que el escritor tarda 2 segundos en escribir
+        sleep(4); // se simula que el escritor tarda 2 segundos en escribir
         sem_post(&semaforo); // se quita el semaforo cuando el escritor ya escribio en el libro y deja pasar a los lectores para que lean
 
 
-        sleep(3); // tiempo de 3 segundos para que el escritor que acaba de escribir pueda volver a escribir
+        sleep(4); // tiempo de 3 segundos para que el escritor que acaba de escribir pueda volver a escribir
     }
     return NULL;
 }
@@ -108,6 +108,7 @@ int main(int argc,char const *argv[])
 
     pthread_mutex_destroy(&mutex); // destruir el mutex
     sem_destroy(&semaforo); // destruir el semaforo
+
 
     return 0;
 }
