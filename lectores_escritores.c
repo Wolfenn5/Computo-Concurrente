@@ -4,7 +4,7 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-/* El programa se ejecutara siempre por la condicion de los whiles con el fin de*/
+/* El programa se ejecutara siempre por la condicion de los whiles con el fin de ver como cambian los lectores y escritores con cada ejecucion*/
 
 int libro= 0; // el contenido del libro solo tendra el id del escritor que escriba en el 
 
@@ -32,7 +32,7 @@ void *lector(void *arg)
 
 void *escritor(void *arg) 
 {
-    int id=*(int *)arg;
+    int id=*(int *)arg; // se recibe el id del escritor
     while(1) 
     {
 
