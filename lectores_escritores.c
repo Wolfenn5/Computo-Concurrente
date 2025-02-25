@@ -10,7 +10,7 @@ int libro= 0; // el contenido del libro solo tendra el id del escritor que escri
 
 
 // Declaracion de mutex y semaforo
-pthread_mutex_t mutex; // mutex para proteger a los lectores
+pthread_mutex_t mutex; // mutex para proteger a los escritores
 sem_t semaforo; // controla el acceso exclusivo al libro
 
 
