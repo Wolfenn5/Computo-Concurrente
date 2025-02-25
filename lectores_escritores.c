@@ -83,12 +83,12 @@ int main(int argc,char const *argv[])
     for(int i=0;i<num_lectores;i++) 
     {
         ids_lectores[i]=i+1;
-        pthread_create(&hilos_lectores[i],NULL,lector,(void *)&ids_lectores[i]);
+        pthread_create(&hilos_lectores[i],NULL,lector,(void *)&ids_lectores[i]); // argumentos: hilo, NULL, funcion a hacer, id del hilo lector
     }
     // Escritores
     for(int i=0;i<num_escritores;i++) {
         ids_escritores[i]=i+1;
-        pthread_create(&hilos_escritores[i],NULL,escritor,(void *)&ids_escritores[i]);
+        pthread_create(&hilos_escritores[i],NULL,escritor,(void *)&ids_escritores[i]); // argumentos: hilo, NULL, funcion a hacer, id del hilo escritor
     }
 
 
@@ -96,11 +96,11 @@ int main(int argc,char const *argv[])
     // Esperar a que los hilos terminen
     // Lectores
     for(int i=0;i<num_lectores;i++) {
-        pthread_join(hilos_lectores[i],NULL);
+        pthread_join(hilos_lectores[i],NULL); // argumentos: hilo, NULL
     }
     // Escritores
     for(int i=0;i<num_escritores;i++) {
-        pthread_join(hilos_escritores[i],NULL);
+        pthread_join(hilos_escritores[i],NULL); // argumentos: hilo, NULL
     }
 
     pthread_mutex_destroy(&mutex); // destruir el mutex
