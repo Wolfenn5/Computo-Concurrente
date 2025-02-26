@@ -69,7 +69,7 @@ hilo1.join();
 
 /* --------- Semaforos --------- */
 // Declaracion de semaforos
-std::counting_semaphore<1> semaforo(1); // inicializar el contador del semaforo en 1
+std::counting_semaphore<1> semaforo(1); // inicializar el contador del semaforo en 1 y el valor maximo de ese contador sera 1 <1>
 // Bloquear con semaforo
 semaforo.acquire();
 // Desbloquear con semaforo
