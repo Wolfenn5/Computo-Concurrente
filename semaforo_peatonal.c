@@ -31,12 +31,8 @@ void * semaforo(void * argc)
 void * peaton(void * argc)
 {
 
-    int * id= (int*) argc;
 
-
-
-
-    printf("\nSoy el peaton y estoy esperando poder cruzar", *id);
+    printf("\nSoy el peaton y estoy esperando poder cruzar");
     pthread_mutex_lock(&mutex);
 
     while (luz_semaforo == 0) // mientras la luz del semaforo este en rojo
@@ -61,46 +57,21 @@ void * peaton(void * argc)
 int main(int argc, char const *argv[])
 {
 
-    /* Version con varios hilos*/
-    int num_peatones= atoi(argv[1]);
-    pthread_t hilo_policia, hilos_peaton[num_peatones];
-    pthread_create(&hilo_policia,NULL, semaforo, NULL);
-    int * id;
-    for (int i=0; i<num_peatones; i++)
-    {
-        id= id+1;
-        pthread_create(&hilos_peaton[i],NULL, peaton, (void *)id);
-    }
+
+    // Declarar los hilos
+    pthread_t hilo_policia;
+    pthread_t hilo_peaton;
 
 
-    
+    // Crear los hilos
+    pthread_create(&hilo_policia, NULL, semaforo, NULL);
+    pthread_create(&hilo_policia, NULL, peaton, NULL);
+
+
+
+    // Esperar a que los hilos terminen
     pthread_join(hilo_policia,NULL);
-    for (int i=0; i<num_peatones; i++)
-    {
-        pthread_join(hilos_peaton[i],NULL);
-    }
-    
-    /*----------------------------------------------------------------------*/
-
-
-
-
-
-
-    // // Declarar los hilos
-    // pthread_t hilo_policia;
-    // pthread_t hilo_peaton;
-
-
-    // // Crear los hilos
-    // pthread_create(&hilo_policia, NULL, semaforo, NULL);
-    // pthread_create(&hilo_policia, NULL, peaton, NULL);
-
-
-
-    // // Esperar a que los hilos terminen
-    // pthread_join(hilo_policia,NULL);
-    // pthread_join(hilo_peaton, NULL);
+    pthread_join(hilo_peaton, NULL);
     
 
     // Liberacion
