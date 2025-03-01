@@ -9,7 +9,8 @@ pthread_cond_t condicion = PTHREAD_COND_INITIALIZER;
 
 int luz_semaforo = 0;//0 para rojo y 1 para verde
 
-void * semaforo(void * arg){
+void * semaforo(void * arg)
+{
 	sleep(1);//simulamos el tiempo en que el semaforo esta en rojo
 	pthread_mutex_lock(&mutex);//el policia recibe la peticion del peaton para poder liberar de forma temporal... entonces, el policia bloquea el semaforo para solamente el poder cambiar el color de la luz
 	luz_semaforo=1;//el policia cambia la luz a color verde
@@ -20,19 +21,23 @@ void * semaforo(void * arg){
 	pthread_exit(NULL);
 }
 
-void * peaton(void * arg){
+void * peaton(void * arg)
+{
 	int * id = (int *) arg;
 	printf("\nSoy el peaton %d y estoy esperando a poder cruzar\n",*id);
 	pthread_mutex_lock(&mutex);
 	while(luz_semaforo==0)//mientras la luz del semaforo este en rojo
+    {
 		pthread_cond_wait(&condicion,&mutex);//el peaton va a estar volteando y esperara a poder cruzar... (cada que voltea a ver al policia, le desbloquea de forma temporal a la condicion)
+    }
 	printf("\nGracias por dejarme cruzar (peaton %d)\n",*id);
+    pthread_cond_signal(&condicion); // cada peaton despues de cruzar, "despertara" mandara una señal a otro peaton que este esperando en pthread_cond_wait, asegurando que todos puedan cruzar
 	pthread_mutex_unlock(&mutex);
-    pthread_cond_signal(&condicion); // cada peaton despues de cruzar, despertara a otro peaton que este esperando en pthread_cond_wait, asegurando que todos puedan cruzar
 	pthread_exit(NULL);
 }
 
-int main(int argc, char * argv[]){
+int main(int argc, char * argv[])
+{
 	int num_peatones=atoi(argv[1]);
 	//declaramos nuestros hilos
 	pthread_t hilo_policia, hilos_peaton[num_peatones];

@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
 
     // Crear los hilos
     pthread_create(&hilo_policia, NULL, semaforo, NULL);
-    pthread_create(&hilo_policia, NULL, peaton, NULL);
+    pthread_create(&hilo_peaton, NULL, peaton, NULL);
 
 
 
