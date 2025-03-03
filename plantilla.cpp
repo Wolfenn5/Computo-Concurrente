@@ -81,6 +81,8 @@ semaforo.release();
 /* --------- Mutex --------- */
 // Declaracion de mutex
 std::mutex mutex;
+// Sirve para liberar de forma "semi-automatica" el mutex en vez de usar lock y unlock
+std::lock_guard<std::mutex> lock (mutex); 
 // Bloquear con mutex
 mutex.lock();
 // Desbloquear con mutex
