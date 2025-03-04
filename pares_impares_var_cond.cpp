@@ -6,7 +6,7 @@
 
 /* El programa hace una suma del 1 al 100 de pares e impares con un hilo para cada tipo de suma*/
 // notify_one es equivalente a cond_signal
-// notify_all es equivalente a notify all
+// notify_all es equivalente a cond_broadcast
 
 
 
