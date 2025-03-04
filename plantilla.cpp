@@ -46,6 +46,17 @@ pthread_mutex_destroy(&mutex);
 
 
 
+/* --------- Variables de Condicion --------- */
+// Declaracion de variable de condicion
+pthread_cond_t variable_condicion= PTHREAD_COND_INITIALIZER;
+// Notificaciones 
+pthread_cond_signal(&variable_condicion); // despierta a un solo hilo
+pthread_cond_broadcast(&variable_condicion); // despierta a un solo hilo
+// Destruccion de variable de condicion
+pthread_cond_destroy(&variable_condicion);
+// Esperar por una señal
+pthread_cond_wait(&variable_condicion, &mutex); // Liberar temporalmente el mutex, dependiendo de la señal. Se desbloquea mientras se espera la señal
+
 
 /* -------------- C++ --------------*/
 #include <iostream>
@@ -53,6 +64,7 @@ pthread_mutex_destroy(&mutex);
 #include <chrono> // biblioteca para trabajar con el tiempo pero de forma nativa de C++
 #include <mutex> 
 #include <semaphore> // semaforos
+#include <condition_variable> // biblioteca para variables de condicion
 
 
 /* --------- Hilos --------- */
@@ -82,9 +94,18 @@ semaforo.release();
 // Declaracion de mutex
 std::mutex mutex;
 // Sirve para liberar de forma "semi-automatica" el mutex en vez de usar lock y unlock
-std::lock_guard<std::mutex> lock (mutex); 
+std::lock_guard<std::mutex> lock (mutex); // sirve para liberar de forma "semi-automatica" el mutex en vez de usar lock y unlock  (el bloque de codigo que este dentro de {} )
 // Bloquear con mutex
 mutex.lock();
 // Desbloquear con mutex
 mutex.unlock();
 // Destruccion de mutex se hace de forma automatica
+
+
+
+/* --------- Variables de Condicion --------- */
+// Declaracion de variable de condicion
+std::condition_variable variable_condicion;
+// Notificaciones 
+variable_condicion.notify_one(); // notificar a otro hilo que se modifico algo ; es equivalente a pthread_cond_signal()     que despierta un hilo
+variable_condicion.notify_all(); // notificar a otro hilo que se modifico algo ; es equivalente a pthread_cond_broadcast()  que despierta a todos los hilos
