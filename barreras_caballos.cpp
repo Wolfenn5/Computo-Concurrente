@@ -19,9 +19,9 @@ void carrera (int id)
         std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 1000));
         std::cout<<"\nEl caballo "<<id<<" ha terminado la etapa "<<i<<" y va a esperar";
         // esperar a que todos los caballos lleguen
-        barrera.arrive_and_wait(NUMCABALLOS); 
+        barrera.arrive_and_wait(); 
     }
-    std::cout<<"\nEl caballo "<<id<<"ha terminado la carrera\n";
+    std::cout<<"\nEl caballo "<<id<<" ha terminado la carrera\n";
 }
 
 
