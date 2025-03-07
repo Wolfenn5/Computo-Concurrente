@@ -68,7 +68,7 @@ int main(int argc, char const *argv[])
 
 
     // Declarar hilos
-    pthread_t hilo_cortadores, hilo_soldadores, hilo_pintores;
+    pthread_t hilo_cortadores[num_cortadores], hilo_soldadores[num_soldadores], hilo_pintores[num_pintores];
 
 
     // inicializar la barrera
@@ -87,7 +87,7 @@ int main(int argc, char const *argv[])
 	// Esperar que terminen los hilos
 	for(int i=0;i<num_cortadores;++i)
     {
-		pthread_join(num_cortadores[i],NULL);
+		pthread_join(hilo_cortadores[i],NULL);
     }
 
     //Soldadores
@@ -99,7 +99,7 @@ int main(int argc, char const *argv[])
 	// Esperar que terminen los hilos
 	for(int i=0;i<num_soldadores;++i)
     {
-		pthread_join(num_soldadores[i],NULL);
+		pthread_join(hilo_soldadores[i],NULL);
     }
 
     //Pintores
@@ -111,7 +111,7 @@ int main(int argc, char const *argv[])
 	// Esperar que terminen los hilos
 	for(int i=0;i<num_pintores;++i)
     {
-		pthread_join(num_pintores[i],NULL);
+		pthread_join(hilo_pintores[i],NULL);
     }
 
 
