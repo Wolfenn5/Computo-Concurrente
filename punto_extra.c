@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <semaphore.h>
+#include <stdlib.h>
 
 /* Productor consumidor de cortadores
 
@@ -29,61 +30,85 @@ pthread_cond_t condicion_cortadores= PTHREAD_COND_INITIALIZER; // variable
 pthread_cond_t condicion_soldadores= PTHREAD_COND_INITIALIZER; // variable
 pthread_cond_t condicion_pintores= PTHREAD_COND_INITIALIZER; // variable
 
-sem_t semaforo;
+sem_t semaforo_pintores;
+sem_t semaforo_cortadores;
+sem_t semaforo_soldadores;
 
 
 pthread_barrier_t barrera; 
 
-/*
 
-pthread_barrier_wait(&barrera);
 
-*/
 
 
 void * cortadores (void * arg)
 {
-  int num_cortadores= *(int *)arg; // se recibe el numero de soldadores
-  for (int i=0; i<num_cortadores; i++)
+  int id_cortadores= *(int *)arg; // se recibe el numero de cortadores
+  for (int i=0; i<id_cortadores; i++)
   {
-      pthread_mutex_lock(&mutex);
-      while (1)
-      {
-          pthread_cond_wait(&condicion_pintores, &mutex); // esperar a que los pintores terminen de pintar el producto anterior
-      }
-      printf("\nEl soldador: %d esta cortando...",i);
+    sem_wait(&semaforo_pintores); // esperar a que los pintores terminen de pintar
 
-      pthread_cond_signal(&condicion_pintores); // avisar a los pintores que ya se termino
-      pthread_mutex_unlock(&mutex);
-      sleep(2); // simular el tiempo que esta cortando
+    pthread_mutex_lock(&mutex);
+    while (1)
+    {
+      pthread_cond_wait(&condicion_pintores, &mutex); // esperar a que los pintores terminen de pintar el producto anterior
+    }
+    printf("\nEl cortador: %d esta cortando...",i);
+
+    pthread_cond_signal(&condicion_soldadores); // avisar a los soldadores que ya se corto el material
+    pthread_mutex_unlock(&mutex);
+    sleep(2); // simular el tiempo que esta cortando
+
+    sem_post(&semaforo_soldadores); // indicarle a los soldadores que ya se corto material
   }
   pthread_exit(NULL);
 }
+
 
 
 void * soldadores (void *arg)
 {
-  int num_soldadores= *(int *)arg; // se recibe el numero de soldadores
-  for (int i=0; i<num_soldadores; i++)
+  int id_soldadores= *(int *)arg; // se recibe el numero de soldadores
+  for (int i=0; i<id_soldadores; i++)
   {
-      pthread_mutex_lock(&mutex);
-      while (1)
-      {
-          pthread_cond_wait(&condicion_cortadores, &mutex); // esperar a que los cortadores terminen de cortar el material
-      }
-      printf("\nEl soldador: %d esta cortando...",i);
 
-      pthread_cond_signal(&condicion_pintores); // avisar a los pintores que ya se termino
-      pthread_mutex_unlock(&mutex);
-      sleep(2); // simular el tiempo que esta cortando
+    pthread_mutex_lock(&mutex);
+    while (1)
+    {
+      pthread_cond_wait(&condicion_cortadores, &mutex); // esperar a que los cortadores terminen de cortar el material
+    }
+    printf("\nEl soldador: %d esta cortando...",i);
+
+    pthread_cond_signal(&condicion_pintores); // avisar a los pintores que ya se termino
+    pthread_mutex_unlock(&mutex);
+    sleep(2); // simular el tiempo que esta cortando
   }
   pthread_exit(NULL);
 }
 
 
-void * pintores (void * arg)
-{
 
+void * pintores (void * arg1, void *arg2)
+{
+  int id_pintores= *(int *)arg1; // se recibe el numero de pintores
+  int id_cortadores= *(int *)arg2; // se recibe el numero de cortadores
+  for (int i=0; i<id_pintores; i++)
+  {
+    pthread_mutex_lock(&mutex);
+    while (1)
+    {
+      pthread_cond_wait(&condicion_soldadores, &mutex); // esperar a que los soldadores corten el material
+    }
+    printf("\nEl soldador: %d esta cortando...",i);
+
+    pthread_cond_signal(&condicion_pintores); // avisar a los pintores que ya se termino
+    pthread_mutex_unlock(&mutex);
+    sleep(2); // simular el tiempo que esta cortando
+
+    pthread_barrier_wait(&barrera, id_cortadores); // esperar a todos los pintores
+    sem_post(&semaforo_cortadores); // avisar a los cortadores que todos los pintores ya terminaron
+  }
+  pthread_exit(NULL);
 }
 
 
@@ -108,7 +133,7 @@ int main(int argc, char const *argv[])
 
   // inicializar la barrera
   pthread_barrier_init(&barrera,NULL,num_cortadores); // argumentos: barrera, atributos predeterminados, contador del numero de hilos que debemos esperar en la barrera antes de continuar
-
+  // se pone el numero de cortadores porque los pintores deben esperar a que todos los cortadores terminen antes de empezar a pintar
 
 
   // Creacion de Hilos
@@ -161,7 +186,9 @@ int main(int argc, char const *argv[])
   pthread_barrier_destroy(&barrera);
 
   // Semaforo
-  sem_destroy(&semaforo);
+  sem_destroy(&semaforo_cortadores);
+  sem_destroy(&semaforo_soldadores);
+  sem_destroy(&semaforo_pintores);
 
   // Mutex
   pthread_mutex_destroy(&mutex);
