@@ -45,8 +45,7 @@ void * cortadores (void * arg)
 
   for (int i=0; i<id_cortadores; i++)
   {
-    //sem_wait(&semaforo_pintores); // esperar a que los pintores terminen de pintar
-    sem_wait(&semaforo_cortadores);
+    sem_wait(&semaforo_pintores); // esperar a que los pintores terminen de pintar
 
     pthread_mutex_lock(&mutex);
     pthread_cond_wait(&condicion_pintores, &mutex); // esperar a que los pintores terminen de pintar el producto anterior
@@ -54,7 +53,6 @@ void * cortadores (void * arg)
     pthread_cond_signal(&condicion_soldadores); // avisar a los soldadores que ya se corto el material
     pthread_mutex_unlock(&mutex);
     sleep(2); // simular el tiempo que esta cortando
-
 
     sem_post(&semaforo_soldadores); // indicarle a los soldadores que ya se corto material
   }
@@ -68,8 +66,7 @@ void * soldadores (void *arg)
   int id_soldadores= *(int *)arg; // se recibe el numero de soldadores
   for (int i=0; i<id_soldadores; i++)
   {
-    //sem_wait(&semaforo_cortadores); // esperar a que los cortadores terminen
-    sem_wait(&semaforo_soldadores);
+    sem_wait(&semaforo_cortadores); // esperar a que los cortadores terminen
 
     pthread_mutex_lock(&mutex);
     pthread_cond_wait(&condicion_cortadores, &mutex); // esperar a que los cortadores terminen de cortar el material
@@ -90,8 +87,7 @@ void * pintores (void * arg)
   int id_pintores= *(int *)arg; // se recibe el numero de pintores
   for (int i=0; i<id_pintores; i++)
   {
-    //sem_wait(&semaforo_soldadores); // esperar a que los soldadores terminen
-    sem_wait(&semaforo_pintores);
+    sem_wait(&semaforo_soldadores); // esperar a que los soldadores terminen
 
     pthread_mutex_lock(&mutex);
     pthread_cond_wait(&condicion_soldadores, &mutex); // esperar a que los soldadores corten el material
@@ -102,7 +98,7 @@ void * pintores (void * arg)
 
     pthread_barrier_wait(&barrera); // esperar a que todos los cortadores terminen para poder empezar a pintar
 
-    //sem_post(&semaforo_cortadores); // indicar a los cortadores que todos los pintores ya terminaron
+    sem_post(&semaforo_cortadores); // indicar a los cortadores que todos los pintores ya terminaron
   }
   pthread_exit(NULL);
 }
@@ -133,7 +129,7 @@ int main(int argc, char const *argv[])
 
 
   // Inicializacion de semaforos
-  // se inicializa en 0 
+  // 0 porque se van a usar para hilos
   sem_init(&semaforo_cortadores, 0, num_cortadores);
   sem_init(&semaforo_soldadores, 0, num_soldadores);
   sem_init(&semaforo_pintores, 0, num_pintores);
