@@ -7,7 +7,7 @@
 #define NUMCABALLOS 4
 #define ETAPAS 3
 
-std::barrier sync_point(NUMCABALLOS); //a diferencia de c, se pasa el valor de contador a la barrera desde la declaracion
+std::barrier barrera(NUMCABALLOS); //a diferencia de c, se pasa el valor de contador a la barrera desde la declaracion
 
 
 
