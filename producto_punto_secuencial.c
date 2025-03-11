@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-
+#include <time.h>
 
 /* tamaños del vector 
 1000
@@ -46,14 +46,20 @@ int main(int argc, char const *argv[])
     //     B[i]= i+6; 
     // }
 
+    clock_t inicio, fin; // para saber el tiempo de ejecucion
+    
+    inicio = clock();
     for(int i=0;i<tamanio_vector;i++)
     {
-        resultado+= (long long)A[i]*B[i];
+        resultado+= (long long)A[i]*B[i]; // calculo del producto punto
     }
+    fin = clock();
 
+    double tiempo_ejecucion = (double)(fin - inicio) / CLOCKS_PER_SEC;
 
-    printf("\n\nEl producto punto de A y B es: %lld\n",resultado);
+    printf("\n\nEl producto punto de A y B es: %lld y el tiempo de ejecucion es: %f\n",resultado, tiempo_ejecucion);
 
 
     return 0;
 }
+

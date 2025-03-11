@@ -81,7 +81,10 @@ int main(int argc, char const *argv[])
     parametros argumentos[num_hilos]; // arreglo de argumentos para cada hilo
     pthread_t hilos[num_hilos]; // hilos
 
+    clock_t inicio, fin;
 
+
+    inicio= clock();
     // Creacion de hilos
     for(int i=0; i<num_hilos; i++)
     {
@@ -108,10 +111,14 @@ int main(int argc, char const *argv[])
     for(int i=0; i<num_hilos; i++)
     {
         pthread_join(hilos[i],NULL);
-        resultado_final+= argumentos[i].resultado_parcial;
+        resultado_final+= argumentos[i].resultado_parcial; // conforme se esperan los hilos, cuando un hilo acabe se va a añadir lo que hizo al resultado final
     }
+    fin= clock();
 
-    printf("\n\nEl producto punto de A y B es: %lld\n",resultado_final);
+    double tiempo_ejecucion = (double)(fin - inicio) / CLOCKS_PER_SEC;
+
+
+    printf("\n\nEl producto punto de A y B es: %lld y el tiempo de ejecucion es: %f\n",resultado_final, tiempo_ejecucion);
 
     free(A);
     free(B);
