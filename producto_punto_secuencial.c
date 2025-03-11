@@ -59,7 +59,6 @@ int main(int argc, char const *argv[])
 
     printf("\n\nEl producto punto de A y B es: %lld y el tiempo de ejecucion es: %f\n",resultado, tiempo_ejecucion);
 
-
     return 0;
 }
 

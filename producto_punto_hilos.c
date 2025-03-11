@@ -118,7 +118,8 @@ int main(int argc, char const *argv[])
     double tiempo_ejecucion = (double)(fin - inicio) / CLOCKS_PER_SEC;
 
 
-    printf("\n\nEl producto punto de A y B es: %lld y el tiempo de ejecucion es: %f\n",resultado_final, tiempo_ejecucion);
+    printf("\n\nEl producto punto de A y B es: %lld\n",resultado_final);
+    printf("\nEl tiempo de ejeucion fue de: %f con %d hilos\n",tiempo_ejecucion, num_hilos);
 
     free(A);
     free(B);
