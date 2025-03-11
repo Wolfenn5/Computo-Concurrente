@@ -27,6 +27,7 @@ void carrera (int id)
 
 int main(int argc, char const *argv[])
 {
+    srand(time(NULL));
     // Vector de hilos
     std::vector<std::thread> caballos;
     for (int i=0; i<NUMCABALLOS; i++)

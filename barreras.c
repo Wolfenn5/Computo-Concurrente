@@ -24,7 +24,7 @@ void * fases(void * arg)
     printf("\nHilo %d en la fase 2...\n", id);
     usleep(rand() % 1000000);
     printf("\nHilo %d termino la fase 2\n", id);
-
+    pthread_exit(NULL);
 }
 
 
@@ -33,6 +33,8 @@ int main(int argc, char const *argv[])
 {
     pthread_t hilos[NUMHILOS];
 
+    srand(time(NULL));
+    
     // inicializar la barrera
     pthread_barrier_init(&barrera,NULL,NUMHILOS); // argumentos: barrera, atributos predeterminados, contador del numero de hilos que debemos esperar en la barrera antes de continuar
 
