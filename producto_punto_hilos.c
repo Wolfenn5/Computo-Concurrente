@@ -73,8 +73,8 @@ int main(int argc, char const *argv[])
     // Llenado de vectores (prueba con valores de la practica)
     // for(int i=0; i<5; i++)
     // {
-    //     A[i]= i+1; 
-    //     B[i]= i+6; 
+    //     A[i]= i+1; // 1,2,3,4,5
+    //     B[i]= i+6; // 6,7,8,9,10
     // }
     
 

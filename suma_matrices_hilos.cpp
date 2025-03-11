@@ -39,11 +39,13 @@ int main(int argc, char const *argv[])
 
 
     // Inicializando matrices...
-    for(int i=0;i<filas*columnas;i++) // filas*cloumnas se puede hacer de una vez todo
+    for(int i=0; i<filas*columnas; i++) // filas*cloumnas se puede hacer de una vez todo
     {
-        a[i]=i+1; // valores de 1,2,3 ...           
-        b[i]=(filas*columnas)-i; // valores de ... 3,2,1
+        a[i]= i+1; // valores de 1,2,3 ... 16          
+        b[i]= (filas*columnas)-i; // valores de 16 ... 3,2,1
     }
+
+    
     
     int num_hilos=2;
     std::vector<std::thread> hilos;

@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     long long resultado=0;
 
     // vectores con valores de i (1,2,3,4.... hasta tamanio_vector)
-    for(int i=0;i<tamanio_vector;i++)
+    for(int i=0; i<tamanio_vector; i++)
     {
         A[i]=i+1;
         B[i]=tamanio_vector-i;
@@ -42,8 +42,8 @@ int main(int argc, char const *argv[])
     // Llenado de vectores (prueba con valores de la practica)
     // for(int i=0; i<5; i++)
     // {
-    //     A[i]= i+1; 
-    //     B[i]= i+6; 
+    //     A[i]= i+1; // 1,2,3,4,5
+    //     B[i]= i+6; // 6,7,8,9,10
     // }
 
     clock_t inicio, fin; // para saber el tiempo de ejecucion
