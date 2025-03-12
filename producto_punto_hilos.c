@@ -27,14 +27,14 @@ typedef struct
 void* producto_punto(void *arg) 
 {
     parametros * argumentos= (parametros *)arg; // casting
-    printf("\nSoy el hilo %d y voy a comenzar a calcular\n",argumentos->id);
+    //printf("\nSoy el hilo %d y voy a comenzar a calcular\n",argumentos->id);
     argumentos->resultado_parcial=0; // como se usa memoria dinamica y el vector sera de gran tamaño para las pruebas, se inicializa en 0 por si hay basura
 
     for(int i=argumentos->inicio; i<argumentos->fin; i++) 
     {
         argumentos->resultado_parcial+= ((long long)argumentos->A[i]) * (argumentos->B[i]); // se hace el producto punto y se almacena en resultado parcial porque cada hilo esta haciendo su parte que le toca
     }
-    printf("\nSoy el hilo %d y termine de calcular\n",argumentos->id);
+    //printf("\nSoy el hilo %d y termine de calcular\n",argumentos->id);
     pthread_exit(NULL);
 }
 
