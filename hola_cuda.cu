@@ -21,6 +21,6 @@ int main(int argc, char const *argv[])
     printf("\nNumero maximo de bloques por grid: %d", propiedades.maxGridSize[0]);
     printf("\nNumero maximo de hilos por dimension del bloque: (%d %d %d)", propiedades.maxThreadsDim[0], propiedades.maxThreadsDim[1], propiedades.maxThreadsDim[2]);
     printf("\nTamaño de la memoria global: %.ld GB", propiedades.totalGlobalMem);
-    printf("\nTamaño de memoria compartida (por bloques) %d", propiedades.sharedMemPerBlock);
+    printf("\nTamaño de memoria compartida (por bloques) %d\n", propiedades.sharedMemPerBlock);
     return 0;
 }
