@@ -8,3 +8,5 @@
 !*.hpp
 !*.cc
 !*.cxx
+# para archivos de cuda
+!*.cu
