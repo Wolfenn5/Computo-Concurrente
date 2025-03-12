@@ -48,18 +48,18 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir vector A
-    printf("\nEl vector A es:\n");
-    for (int i=0; i<tamanio_vector; i++)
-    {
-        printf("[%d]", A[i]);
-    }
+    // printf("\nEl vector A es:\n");
+    // for (int i=0; i<tamanio_vector; i++)
+    // {
+    //     printf("[%d]", A[i]);
+    // }
 
     // Imprimir vector B
-    printf("\n\nEl vector B es:\n");
-    for (int i=0; i<tamanio_vector; i++)
-    {
-        printf("[%d]", B[i]);
-    }
+    // printf("\n\nEl vector B es:\n");
+    // for (int i=0; i<tamanio_vector; i++)
+    // {
+    //     printf("[%d]", B[i]);
+    // }
     
     clock_t inicio, fin; // para saber el tiempo de ejecucion
     

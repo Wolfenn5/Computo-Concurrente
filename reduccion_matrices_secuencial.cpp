@@ -5,7 +5,7 @@
 
 int main(int argc, char const *argv[])
 {
-    int filas=3, columnas=3;
+    int filas=10000, columnas=10000;
     //float a[filas*columnas], b[filas],
     // se cambio a apuntadores porque se pasan por referencia a sumaMatrices
     float*a=new float[filas*columnas];
@@ -20,15 +20,15 @@ int main(int argc, char const *argv[])
     }
 
     // Imprimir matriz original
-    std::cout<<"Matriz original:\n";
-    for(int i=0; i<filas; i++)
-    {
-        for(int j=0; j<columnas; j++)
-        {
-            std::cout<<"["<<a[i*columnas+j]<<"]"<<" ";
-        }
-        std::cout<<"\n";
-    }
+    // std::cout<<"Matriz original:\n";
+    // for(int i=0; i<filas; i++)
+    // {
+    //     for(int j=0; j<columnas; j++)
+    //     {
+    //         std::cout<<"["<<a[i*columnas+j]<<"]"<<" ";
+    //     }
+    //     std::cout<<"\n";
+    // }
  
 
     auto inicio= std::chrono::high_resolution_clock::now(); // para medir el tiempo de ejecucion
@@ -47,12 +47,12 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir resultado
-    std::cout<<"\nReduccion de la matriz:\n";
-    for(int i=0;i<filas;i++)
-    {
-        std::cout<<"["<<b[i]<<"]";
-    }
-    std::cout<<"\n";
+    // std::cout<<"\nReduccion de la matriz:\n";
+    // for(int i=0;i<filas;i++)
+    // {
+    //     std::cout<<"["<<b[i]<<"]";
+    // }
+    // std::cout<<"\n";
 
 
     std::cout<<"\n\nEl tiempo de ejecucion es: "<<tiempo_ejecucion.count()<<"\n";
