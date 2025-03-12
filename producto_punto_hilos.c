@@ -78,6 +78,22 @@ int main(int argc, char const *argv[])
     // }
     
 
+    // Imprimir vector A
+    printf("\nEl vector A es:\n");
+    for (int i=0; i<tamanio_vector; i++)
+    {
+        printf("[%d]", A[i]);
+    }
+
+    // Imprimir vector B
+    printf("\n\nEl vector B es:\n");
+    for (int i=0; i<tamanio_vector; i++)
+    {
+        printf("[%d]", B[i]);
+    }
+
+    printf("\n\n");
+
     parametros argumentos[num_hilos]; // arreglo de argumentos para cada hilo
     pthread_t hilos[num_hilos]; // hilos
 
@@ -115,11 +131,11 @@ int main(int argc, char const *argv[])
     }
     fin= clock();
 
-    double tiempo_ejecucion = (double)(fin - inicio) / CLOCKS_PER_SEC;
+    double tiempo_ejecucion= (double)(fin - inicio) / CLOCKS_PER_SEC;
 
 
     printf("\n\nEl producto punto de A y B es: %lld\n",resultado_final);
-    printf("\nEl tiempo de ejeucion fue de: %f con %d hilos\n",tiempo_ejecucion, num_hilos);
+    printf("\nEl tiempo de ejeucion con %d hilos es: %f\n",num_hilos, tiempo_ejecucion);
 
     free(A);
     free(B);

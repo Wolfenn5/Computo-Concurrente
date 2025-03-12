@@ -27,16 +27,16 @@ int main(int argc, char const *argv[])
     int tamanio_vector= atoi(argv[1]); // argumento de main para el tamaño del vector
 
 
-    int *A=(int*)malloc(tamanio_vector*sizeof(int));
-    int *B=(int*)malloc(tamanio_vector*sizeof(int));
+    int *A= (int*)malloc(tamanio_vector*sizeof(int));
+    int *B= (int*)malloc(tamanio_vector*sizeof(int));
    
     long long resultado=0;
 
     // vectores con valores de i (1,2,3,4.... hasta tamanio_vector)
     for(int i=0; i<tamanio_vector; i++)
     {
-        A[i]=i+1;
-        B[i]=tamanio_vector-i;
+        A[i]= i+1;
+        B[i]= tamanio_vector-i;
     }
 
     // Llenado de vectores (prueba con valores de la practica)
@@ -46,16 +46,31 @@ int main(int argc, char const *argv[])
     //     B[i]= i+6; // 6,7,8,9,10
     // }
 
+
+    // Imprimir vector A
+    printf("\nEl vector A es:\n");
+    for (int i=0; i<tamanio_vector; i++)
+    {
+        printf("[%d]", A[i]);
+    }
+
+    // Imprimir vector B
+    printf("\n\nEl vector B es:\n");
+    for (int i=0; i<tamanio_vector; i++)
+    {
+        printf("[%d]", B[i]);
+    }
+    
     clock_t inicio, fin; // para saber el tiempo de ejecucion
     
-    inicio = clock();
+    inicio= clock();
     for(int i=0;i<tamanio_vector;i++)
     {
         resultado+= (long long)A[i]*B[i]; // calculo del producto punto
     }
-    fin = clock();
+    fin= clock();
 
-    double tiempo_ejecucion = (double)(fin - inicio) / CLOCKS_PER_SEC;
+    double tiempo_ejecucion= (double)(fin - inicio) / CLOCKS_PER_SEC;
 
     printf("\n\nEl producto punto de A y B es: %lld y el tiempo de ejecucion es: %f\n",resultado, tiempo_ejecucion);
 

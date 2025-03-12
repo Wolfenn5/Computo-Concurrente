@@ -2,6 +2,7 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <chrono>
 
 
 
@@ -32,7 +33,7 @@ int main(int argc, char const *argv[])
 {
     int filas=4, columnas=4;
     //float a[filas*columnas], b[filas*columnas], c[filas*columnas];
-    // Se cambio a apuntadores porque se pasan por referencia a sumaMatrices
+    // se cambio a apuntadores porque se pasan por referencia a sumaMatrices
     float*a=new float[filas*columnas];
     float*b=new float[filas*columnas];
     float*c=new float[filas*columnas];
@@ -45,14 +46,36 @@ int main(int argc, char const *argv[])
         b[i]= (filas*columnas)-i; // valores de 16 ... 3,2,1
     }
 
-    
+    // Imprimir matriz a
+    std::cout<<"Matriz a:\n";
+    for(int i=0; i<filas; i++)
+    {
+        for(int j=0; j<columnas; j++)
+        {
+            std::cout<<"["<<a[i*columnas+j]<<"]"<<" ";
+        }
+        std::cout<<"\n";
+    }
+
+    // Imprimir matriz b
+    std::cout<<"\n\nMatriz b:\n";
+    for(int i=0; i<filas; i++)
+    {
+        for(int j=0; j<columnas; j++)
+        {
+            std::cout<<"["<<b[i*columnas+j]<<"]"<<" ";
+        }
+        std::cout<<"\n";
+    }
     
     int num_hilos=2;
     std::vector<std::thread> hilos;
     int filas_por_hilo= filas/num_hilos;
 
 
-    
+
+
+    auto inicio= std::chrono::high_resolution_clock::now(); // para medir el tiempo de ejecucion
 
     for (int i=0; i<num_hilos; i++)
     {
@@ -61,21 +84,28 @@ int main(int argc, char const *argv[])
         hilos.emplace_back(sumaMatrices, a, b, c, filas, columnas, inicio, fin);
     }
     
+
     for (auto &hilo : hilos)
     {
         hilo.join();
     }
 
+    auto fin= std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> tiempo_ejecucion= fin-inicio;
+
+
     // Imprimir matriz c
     std::cout<<"\nLa suma de las matrices A y B es:\n";
     for(int i=0;i<filas;i++)
     {
-        for(int j=0;j<columnas;j++)
+        for(int j=0; j<columnas; j++)
         {
             std::cout<<"["<<c[i*columnas+j]<<"]";
         }
         std::cout<<"\n";
     }
+
+    std::cout<<"\n\nEl tiempo de ejecucion con 2 hilos es: "<<tiempo_ejecucion.count()<<"\n";
     
     return 0;
 }
