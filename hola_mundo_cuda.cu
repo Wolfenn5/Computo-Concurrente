@@ -7,6 +7,8 @@
 __global__ void kernel ()
 {
     printf("\nHola desde el bloque %d, hilo %d\n", blockIdx.x, threadIdx.x); // blockidx y threadidx son para obtener el bloque y el hilo de ese bloque en eje x (los 2 hilo y bloque)
+    __syncthreads(); // sincronizar los hilos dentro del mismo bloque
+    printf("\nHola despues de la sincronizacion y soy el bloque %d, hilo%d \n", blockIdx.x, threadIdx.x); 
 }
 
 
