@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
 
     num_bloques= propiedades.multiProcessorCount; // numero de multiprocesadores que soporta la GPU (como los bloques)
 
-    num_hilos= propiedades.maxThreadsPerBlock;
+    num_hilos= propiedades.maxThreadsPerBlock; // numero maximo de hilos por bloque
     printf("\nEjecutando kernel en CUDA \n");
 
     kernel<<<num_bloques,num_hilos>>>();
