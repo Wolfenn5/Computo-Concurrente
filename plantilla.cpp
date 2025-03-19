@@ -1,6 +1,26 @@
 // Otra forma de compilar      --> g++ nombre.cpp -o nombre -std=c++20
 // Compilar en mac             --> clang++ -std=c++11 -lpthread nombre.cpp -o nombre  solo clang si es en c
 
+
+
+
+
+
+
+
+/* -------------- CUDA -------------- */
+// Calcular el numero de hilos a ocupar
+cudaDeviceProp propiedades;
+cudaGetDeviceProperties(&propiedades,0);
+int tamanio_bloque= propiedades.maxThreadsPerBlock; 
+int numero_bloques= ((n+tamanio_bloque-1)/tamanio_bloque); // n es el numero de datos, la formula es universal
+// Si se quiere saber el numero de hilos maximo se multiplica tamanio_bloque*numero_bloques
+
+
+
+
+
+
 /* -------------- C -------------- */
 #include <stdio.h>
 #include <semaphore.h> // semaforos
