@@ -34,7 +34,7 @@ void MatrizxVector (float * matriz, float * arreglo, float * resultado, int n, i
     {
         resultado[i]=0; // inicializar el elemento correspondiente al arreglo del resultado
 
-        for (int j=0; j<m; i++)
+        for (int j=0; j<m; j++)
         {
             // calcular el indice porque la matriz se esta trabajando como un arreglo (doble apuntador)
             // se usa el numero de columnas como base para el desplazamiento (i*m+j)
