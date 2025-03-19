@@ -81,7 +81,7 @@ int main(int argc, char const *argv[])
         matriz_host[i]=(float) rand()/RAND_MAX; // valores entre 0 y 1
     }
 
-    for (int i=0; i<n*m; i++)
+    for (int i=0; i<m; i++)
     {
         arreglo_host[i]=(float) rand()/RAND_MAX; // valores entre 0 y 1
     }
@@ -97,7 +97,7 @@ int main(int argc, char const *argv[])
     cudaDeviceProp propiedades;
     cudaGetDeviceProperties(&propiedades,0);
     int tamanio_bloque= propiedades.maxThreadsPerBlock; 
-    int numero_bloques= ((n+tamanio_bloque-1)/tamanio_bloque); // n es el numero de datos, la formula es universal
+    int numero_bloques= (n+tamanio_bloque-1)/tamanio_bloque; // n es el numero de datos, la formula es universal
     // Si se quiere saber el numero de hilos maximo se multiplica tamanio_bloque*numero_bloques
 
 
