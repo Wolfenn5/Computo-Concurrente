@@ -38,7 +38,7 @@ void MatrizxVector (float * matriz, float * arreglo, float * resultado, int n, i
         {
             // calcular el indice porque la matriz se esta trabajando como un arreglo (doble apuntador)
             // se usa el numero de columnas como base para el desplazamiento (i*m+j)
-            resultado[i]+= (matriz[i*m+j]) * (arreglo[j]);
+            resultado[i]+= matriz[i*m+j] * arreglo[j];
         }
         
     }
@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
     int m= atoi(argv[2]);
 
 
-    float ** matriz=(float**) malloc(sizeof(float)*n*m);
+    float * matriz=(float*) malloc(sizeof(float)*n*m);
     float * arreglo=(float*) malloc(sizeof(float)*m);
     float * resultado=(float*) malloc(sizeof(float)*n);
 
@@ -66,7 +66,7 @@ int main(int argc, char const *argv[])
         matriz[i]=(float) rand()/RAND_MAX; // valores entre 0 y 1
     }
 
-    for (int i=0; i<n*m; i++)
+    for (int i=0; i<m; i++)
     {
         arreglo[i]=(float) rand()/RAND_MAX; // valores entre 0 y 1
     }
