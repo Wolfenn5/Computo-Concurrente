@@ -124,11 +124,25 @@ int main(int argc, char const *argv[])
     dim3 tamanio_malla((N+num_bloques-1) / num_bloques,(N+num_bloques-1) / num_bloques);
 
 
+
+    // Medir tiempo del dispositivo (GPU) usando eventos de cuda
+    cudaEvent_t inicio, fin; // vendria siendo el equivalente a clock_t 
+    // se declaran variables que van a ser eventos
+    cudaEventCreate(&inicio);
+    cudaEventCreate(&fin);
+
+
+
+    cudaEventRecord(inicio); // se marca en donde va a empezar a medir el tiempo de GPU que es cuando se lanza el kernel para empezar a hacer calculos
     // Lanzar el kernel
     MultiplicarMatrices<<<tamanio_malla, tamanio_bloque>>>(matrizA_dispositivo, matrizB_dispositivo, matrizC_dispositivo, N);
+    cudaEventRecord(fin); // se marca en donde va a terminar de medirse el tiempo de GPU que es cuando el kernel ya acabo
 
+
+    // Esperar a que los hilos de la GPU terminen
     cudaDeviceSynchronize(); // es el equivalente a .join en hilos. Es importante utilizarlo para no trabar la GPU
 
+  
     // Copiar del dispositivo al host
     cudaMemcpy(matrizC_host, matrizC_dispositivo, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
 
@@ -145,6 +159,11 @@ int main(int argc, char const *argv[])
     }
     //printf("\n%f\n", matrizC_host[(N*N)-1]); // ultimo elemento nadamas (para probar con valores grandes cuando se hace con numeros consecutivos)
 
+
+    // Calcular el tiempo que le tomo a la GPU hacer los calculos
+    float tiempo_GPU=0; 
+    cudaEventElapsedTime(&tiempo_GPU, inicio, fin); // se indica en donde se va a guardar, el inicio y el final. Siempre va a devolver el tiempo en milisegundos
+    printf("\nEl tiempo de ejecucion del dispositivo (GPU) fue de: %f milisegundos\n",tiempo_GPU);
 
     // Liberar memoria del dispositivo (GPU)
     cudaFree(matrizA_dispositivo);
