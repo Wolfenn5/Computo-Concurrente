@@ -2,21 +2,42 @@
 // Compilar en mac             --> clang++ -std=c++11 -lpthread nombre.cpp -o nombre  solo clang si es en c
 
 
-
-
-
-
-
-
 /* -------------- CUDA -------------- */
 // Calcular el numero de hilos a ocupar
+// Calcular el numero de bloques necesario para cubrir 1 millon de elementos con un tamaño de bloque de 1024 hilos
+// int N= 1000000000;
+// int tambloque= 1024;
+// int numbloques= (N+tambloque-1) / tambloque;
+// La operacion seria (1,000,000,000 + 1024 -1) / 1024 = 976,567 numbloques
+
+// Calcular el tamaño de la malla "tamanoMalla" utilizando el numero de bloques anterior de 976,567
+// La operacion seria (1,000,000,000 + 976,567 -1) / 976,567 = 1024.99 = tamanoMalla= (1025,1025)
+
+// Calcular los hilos totalHilos multiplicando el tamaño de la malla en cada dimension por el tamaño del bloque
+// totalHilos= 1025* 1025 * 1024= 1,075,840,000;
+
+
+// Obtener datos del dispositivo GPU
 cudaDeviceProp propiedades;
 cudaGetDeviceProperties(&propiedades,0);
-int tamanio_bloque= propiedades.maxThreadsPerBlock; 
-int numero_bloques= ((n+tamanio_bloque-1)/tamanio_bloque); // n es el numero de datos, la formula es universal
+
+// Calcular el tamaño del bloque
+int tamanio_bloque= propiedades.maxThreadsPerBlock; // saber el tamaño del bloque
+int numero_bloques= ((n+tamanio_bloque-1)/tamanio_bloque); // n es el numero de datos, la formula es universal ; Es para saber cuantos bloques necesitamos para trabajar
 // Si se quiere saber el numero de hilos maximo se multiplica tamanio_bloque*numero_bloques
 
-
+// Obtener el id del hilo
+int id_hilo= blockIdx.x * blockDim.x + threadIdx.x; // bloque 0 dimension bloque 512 + id hilo 0 seria el hilo 512
+// Liberar recursos del dispositivo (GPU)
+cudaFree(matriz_dispositivo);
+// Liberar recursos del host (CPU)
+free (matriz_host);
+// Declaracion de la memoria en el dispositivo (GPU)
+cudaMalloc(&A_dispositivo, dimension*sizeof(int));
+// Mover la memoria del host al dispositivo
+cudaMemcpy(A_dispositivo, A_host, dimension*sizeof(int),cudaMemcpyHostToDevice);
+// Regresar la informacion del dispositivo al host
+cudaMemcpy(resultado_host, resultado_dispositivo,sizeof(float)*n,cudaMemcpyDeviceToHost);
 
 
 
@@ -76,6 +97,11 @@ pthread_cond_broadcast(&variable_condicion); // despierta a un solo hilo
 pthread_cond_destroy(&variable_condicion);
 // Esperar por una señal
 pthread_cond_wait(&variable_condicion, &mutex); // Liberar temporalmente el mutex, dependiendo de la señal. Se desbloquea mientras se espera la señal
+
+
+
+
+
 
 
 /* -------------- C++ --------------*/
