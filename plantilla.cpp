@@ -21,10 +21,16 @@
 cudaDeviceProp propiedades;
 cudaGetDeviceProperties(&propiedades,0);
 
-// Calcular el tamaño del bloque
-int tamanio_bloque= propiedades.maxThreadsPerBlock; // saber el tamaño del bloque
-int numero_bloques= ((n+tamanio_bloque-1)/tamanio_bloque); // n es el numero de datos, la formula es universal ; Es para saber cuantos bloques necesitamos para trabajar
-// Si se quiere saber el numero de hilos maximo se multiplica tamanio_bloque*numero_bloques
+// Calcular el numero de hilos a ocupar
+// Sacar propiedades del dispositivo
+cudaDeviceProp propiedades;
+cudaGetDeviceProperties (&propiedades,0);
+int tam_bloque= propiedades.maxThreadsPerBlock; // calcular tamaño optimo del bloque
+int num_bloques= (N+tam_bloque-1) / tam_bloque; // calcular el numero de bloques ; N es el numero de datos (en este caso el tamaño de la matriz), la formula es universal
+// Si se quiere saber el numero de hilos maximo se multiplica tam_bloque*numero_bloques
+// Definir el tamaño de la malla y el bloque
+dim3 tamanio_bloque(num_bloques,num_bloques);
+dim3 tamanio_malla((N+num_bloques-1) / num_bloques,(N+num_bloques-1) / num_bloques);
 
 // Obtener el id del hilo
 int id_hilo= blockIdx.x * blockDim.x + threadIdx.x; // bloque 0 dimension bloque 512 + id hilo 0 seria el hilo 512
@@ -32,7 +38,9 @@ int id_hilo= blockIdx.x * blockDim.x + threadIdx.x; // bloque 0 dimension bloque
 cudaFree(matriz_dispositivo);
 // Liberar recursos del host (CPU)
 free (matriz_host);
-// Declaracion de la memoria en el dispositivo (GPU)
+// Declaracion en el host (CPU)
+float *A_dispositivo= (float*) malloc(sizeof(float)*dimension*dimension2);
+// Declaracion en el dispositivo (GPU)
 cudaMalloc(&A_dispositivo, dimension*sizeof(int));
 // Mover la memoria del host al dispositivo
 cudaMemcpy(A_dispositivo, A_host, dimension*sizeof(int),cudaMemcpyHostToDevice);
