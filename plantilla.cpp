@@ -67,10 +67,6 @@ dim3 tamanio_malla((N+num_bloques-1) / num_bloques,(N+num_bloques-1) / num_bloqu
 
 // Obtener el id del hilo
 int id_hilo= blockIdx.x * blockDim.x + threadIdx.x; // bloque 0 dimension bloque 512 + id hilo 0 seria el hilo 512
-// Liberar recursos del dispositivo (GPU)
-cudaFree(matriz_dispositivo);
-// Liberar recursos del host (CPU)
-free (matriz_host);
 // Declaracion en el host (CPU)
 float *A_dispositivo= (float*) malloc(sizeof(float)*dimension*dimension2);
 // Declaracion en el dispositivo (GPU)
@@ -79,6 +75,12 @@ cudaMalloc(&A_dispositivo, dimension*sizeof(int));
 cudaMemcpy(A_dispositivo, A_host, dimension*sizeof(int),cudaMemcpyHostToDevice);
 // Regresar la informacion del dispositivo al host
 cudaMemcpy(resultado_host, resultado_dispositivo,sizeof(float)*n,cudaMemcpyDeviceToHost);
+// Esperar a los hilos del dispositivo (GPU)
+cudaDeviceSynchronize(); // es el equivalente a .join en hilos. Es importante utilizarlo para no trabar la GPU
+// Liberar recursos del host (CPU)
+free (matriz_host);
+// Liberar recursos del dispositivo (GPU)
+cudaFree(matriz_dispositivo);
 
 
 
