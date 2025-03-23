@@ -148,22 +148,22 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir matriz C
-    printf("\nMatriz resultado:\n");
-    for (int i=0; i<N; i++) 
-    {
-        for (int j=0; j<N; j++) 
-        {
-            printf("%f ", matrizC_host[i*N+j]);
-        }
-        printf("\n");
-    }
+    // printf("\nMatriz resultado:\n");
+    // for (int i=0; i<N; i++) 
+    // {
+    //     for (int j=0; j<N; j++) 
+    //     {
+    //         printf("%f ", matrizC_host[i*N+j]);
+    //     }
+    //     printf("\n");
+    // }
     //printf("\n%f\n", matrizC_host[(N*N)-1]); // ultimo elemento nadamas (para probar con valores grandes cuando se hace con numeros consecutivos)
 
 
     // Calcular el tiempo que le tomo a la GPU hacer los calculos
     float tiempo_GPU=0; 
     cudaEventElapsedTime(&tiempo_GPU, inicio, fin); // se indica en donde se va a guardar, el inicio y el final. Siempre va a devolver el tiempo en milisegundos
-    printf("\nEl tiempo de ejecucion del dispositivo (GPU) fue de: %f milisegundos\n",tiempo_GPU);
+    printf("\nEl tiempo de ejecucion del dispositivo (GPU) fue de: %f segundos\n",tiempo_GPU/1000); // se divide tiempo/1000 para dar el tiempo en segundos en vez de milisegundos
 
     // Liberar memoria del dispositivo (GPU)
     cudaFree(matrizA_dispositivo);
