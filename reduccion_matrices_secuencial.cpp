@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
     // std::cout<<"\n";
 
 
-    std::cout<<"\n\nEl tiempo de ejecucion es: "<<tiempo_ejecucion.count()<<"\n";
+    std::cout<<"\n\nEl tiempo de ejecucion es: "<<tiempo_ejecucion.count()<<" segundos\n";
     delete[] a;
     delete[] b;
 
