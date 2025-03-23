@@ -3,19 +3,18 @@
 
 
 /* -------------- CUDA -------------- */
-// Calcular el numero de hilos a ocupar
-// Calcular el numero de bloques necesario para cubrir 1 millon de elementos con un tamaño de bloque de 1024 hilos
-// int N= 1000000000;
-// int tambloque= 1024;
-// int numbloques= (N+tambloque-1) / tambloque;
-// La operacion seria (1,000,000,000 + 1024 -1) / 1024 = 976,567 numbloques
+/*Calcular el numero de bloques necesario para cubrir 1 millon de elementos con un tamaño de bloque de 1024 hilos
+int N= 1000000000;
+int tambloque= 1024;
+int numbloques= (N+tambloque-1) / tambloque;
+La operacion seria (1,000,000,000 + 1024 -1) / 1024 = 976,567 numbloques
 
-// Calcular el tamaño de la malla "tamanoMalla" utilizando el numero de bloques anterior de 976,567
-// La operacion seria (1,000,000,000 + 976,567 -1) / 976,567 = 1024.99 = tamanoMalla= (1025,1025)
+Calcular el tamaño de la malla "tamanoMalla" utilizando el numero de bloques anterior de 976,567
+La operacion seria (1,000,000,000 + 976,567 -1) / 976,567 = 1024.99 = tamanoMalla= (1025,1025)
 
-// Calcular los hilos totalHilos multiplicando el tamaño de la malla en cada dimension por el tamaño del bloque
-// totalHilos= 1025* 1025 * 1024= 1,075,840,000;
-
+Calcular los hilos totalHilos multiplicando el tamaño de la malla en cada dimension por el tamaño del bloque
+totalHilos= 1025* 1025 * 1024= 1,075,840,000;
+*/
 
 
 

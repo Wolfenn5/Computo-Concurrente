@@ -1,34 +1,3 @@
-/* Ejemplo sencillo de dim3 con gridsize y blocksize*/
-
-// #include <stdio.h>
-// #include <cuda_runtime.h>
-
-
-// __global__ void kernel()
-// {
-// int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-// printf("Hilo ID: %d\n", threadId);
-// }
-
-
-
-// int main()
-// {
-// dim3 gridSize(2, 1, 1); //malla de 2 bloques en x, 1 bloque en y, 1 bloque en z
-// // el numero total de bloques en la cuadricula es 2x1x1= 2
-
-// dim3 blockSize(3, 1, 1); //bloques de 3 hilos en x, 1 hilo en y, 1 hilo en z
-// // cada bloque tendra 3x1x1= 3 hilos
-
-
-// // Asi el numero total de hilos en toda la cuadricula va a ser de 2x3= 6
-// kernel<<<gridSize, blockSize>>>();
-// cudaDeviceSynchronize();
-// return 0;
-// }
-
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
