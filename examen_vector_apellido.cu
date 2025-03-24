@@ -39,7 +39,7 @@ __global__ void MultiplicarVectores (int * vectorA_dispositivo, int * vectorB_di
 
 int main(int argc, char const *argv[])
 {
-    int tam_vector= 30; 
+    int tam_vector= 3500; 
     // int tam_vector= 10; // tamaño de 10 (para probar)
 
     srand(time(NULL)); // para utilizar valores aleatorios 
