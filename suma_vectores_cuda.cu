@@ -57,10 +57,23 @@ int main(int argc, char const *argv[])
 
     // Formula para dividir cualquier vector o arreglo para trabajar con cuda
     int num_bloques= (dimension+tamanio_bloque-1)/tamanio_bloque; // saber cuantos bloques necesitamos para trabajar
+
     
 
-    sumaVectores<<<num_bloques,tamanio_bloque>>>(A_dispositivo, B_dispositivo, C_dispositivo, dimension); // kernel que va a trabajar
+    cudaEvent_t inicio, fin; // vendria siendo el equivalente a clock_t 
+    // se declaran variables que van a ser eventos
+    cudaEventCreate(&inicio);
+    cudaEventCreate(&fin);
 
+
+
+    cudaEventRecord(inicio); // se marca en donde va a empezar a medir el tiempo de GPU que es cuando se lanza el kernel para empezar a hacer calculos
+    sumaVectores<<<num_bloques,tamanio_bloque>>>(A_dispositivo, B_dispositivo, C_dispositivo, dimension); // kernel que va a trabajar
+    cudaEventRecord(fin); // se marca en donde va a terminar de medirse el tiempo de GPU que es cuando el kernel ya acabo
+
+
+    // Esperar a que los hilos de la GPU terminen
+    cudaDeviceSynchronize(); // es el equivalente a .join en hilos. Es importante utilizarlo para no trabar la GPU
 
 
     // Regresar la informacion del dispositivo al host
@@ -68,12 +81,20 @@ int main(int argc, char const *argv[])
 
 
 
-    printf("\nEl arreglo C es:\n");
-    for (int i=0; i<dimension; i++)
-    {
-        printf("%d ", C_host[i]);
-    }
-    printf("\n");
+    // Calcular el tiempo que le tomo a la GPU hacer los calculos
+    float tiempo_GPU=0; 
+    cudaEventElapsedTime(&tiempo_GPU, inicio, fin); // se indica en donde se va a guardar, el inicio y el final. Siempre va a devolver el tiempo en milisegundos
+    printf("\nEl tiempo de ejecucion del dispositivo (GPU) fue de: %f segundos\n",tiempo_GPU/1000); // se divide tiempo/1000 para dar el tiempo en segundos en vez de milisegundos
+
+
+
+    // printf("\nEl arreglo C es:\n");
+    // for (int i=0; i<dimension; i++)
+    // {
+    //     printf("%d ", C_host[i]);
+    // }
+    // printf("\n");
+
 
     // Liberar los recursos de la GPU
     cudaFree(A_dispositivo);

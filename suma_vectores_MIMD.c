@@ -17,12 +17,12 @@ void * suma_vectores (void * arg)
 {
     parametros * argumentos= (parametros *)arg; // casting
 
-    printf("\nSoy el hilo %d y voy a comenzar a sumar mis elementos\n", argumentos->id);
+    //printf("\nSoy el hilo %d y voy a comenzar a sumar mis elementos\n", argumentos->id);
     for (int i=argumentos->inicio; i<argumentos->fin; i++) // el operador -> se usa porque "argumentos" es un apuntador
     {
         argumentos->A[i]+= argumentos->B[i]; // se hace la suma y se almacena en el vector A
     }
-    printf("\nSoy el hilo %d y termine de sumar mis elementos\n", argumentos->id);
+    //printf("\nSoy el hilo %d y termine de sumar mis elementos\n", argumentos->id);
     pthread_exit(NULL);
 }
 
@@ -60,25 +60,32 @@ int main(int argc, char const *argv[])
 
 
 
-    printf("\nEl arreglo A\n");
-    for (int i=0; i<N; i++)
-    {
-        printf("%f ", A[i]);
-    }
-    printf("\n");
+    // printf("\nEl arreglo A\n");
+    // for (int i=0; i<N; i++)
+    // {
+    //     printf("%f ", A[i]);
+    // }
+    // printf("\n");
 
 
-    printf("\nEl arreglo B\n");
-    for (int i=0; i<N; i++)
-    {
-        printf("%f ", B[i]);
-    }
-    printf("\n");
+    // printf("\nEl arreglo B\n");
+    // for (int i=0; i<N; i++)
+    // {
+    //     printf("%f ", B[i]);
+    // }
+    // printf("\n");
+
+
 
     // Declarar hilos
     pthread_t hilos[num_hilos];
 
+
+
+    // Medir el tiempo de ejecucion
+    clock_t inicio, fin;
     // Crear hilos
+    inicio= clock();
     for (int i=0; i<num_hilos; i++)
     {
         argumentos[i].A= A;
@@ -94,6 +101,17 @@ int main(int argc, char const *argv[])
         }
         
     }
+    fin=clock();
+
+
+    
+
+    
+    
+
+    double tiempo_CPU= ((double) (fin-inicio) / CLOCKS_PER_SEC) ;
+
+
 
 
     // Esperar hilos
@@ -102,13 +120,20 @@ int main(int argc, char const *argv[])
         pthread_join(hilos[i],NULL);
     }
     
-    printf("\nEl arreglo resultante es:\n");
 
-    for (int i=0; i<N; i++)
-    {
-        printf("%f ", A[i]);
-    }
-    printf("\n");
+
+    // printf("\nEl arreglo resultante es:\n");
+
+    // for (int i=0; i<N; i++)
+    // {
+    //     printf("%f ", A[i]);
+    // }
+    // printf("\n");
+
+
+    printf("\nEl tiempo de ejecucion es de: %f\n",tiempo_CPU);
+
+
 
     // Opcional si es linux, pero si es windows y mac si es obligatorio
     free(A);
