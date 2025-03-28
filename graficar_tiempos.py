@@ -21,7 +21,7 @@ print(speedup_gpu)
 plt.axhline(y=tiempo_secuencial, color= 'r', linestyle='--', label='secuencial') # esta se ocupa para la ejecucion secuencial
 
 plt.plot(hilos_cpu, tiempos_cpu, marker='o', label= 'Multihilo CPU')
-plt.plot(hilos_cpu, tiempos_cpu, marker='s', label= 'Multihilo GPU')
+plt.plot(hilos_cpu, tiempos_gpu, marker='s', label= 'Multihilo GPU')
 
 
 plt.title("Grafica de tiempos de ejecucion")

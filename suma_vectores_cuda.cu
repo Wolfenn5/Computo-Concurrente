@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
     int tamanio_bloque= propiedades.maxThreadsPerBlock; // saber el tamaño del bloque
 
 
-    //int tamanio_lboque= 64; // para el ejercicio de medir tiempos de ejecucion
+    //int tamanio_bloque= 512; // para el ejercicio de medir tiempos de ejecucion
 
 
     // Formula para dividir cualquier vector o arreglo para trabajar con cuda
