@@ -51,15 +51,15 @@ int main(int argc, char const *argv[])
  
 
     // Imprimir matriz C
-    printf("\nMatriz resultado:\n");
-    for (int i=0; i<N; i++) 
-    {
-        for (int j=0; j<N; j++) 
-        {
-            printf("%f ", matrizC_host[i*N+j]);
-        }
-        printf("\n");
-    }
+    // printf("\nMatriz resultado:\n");
+    // for (int i=0; i<N; i++) 
+    // {
+    //     for (int j=0; j<N; j++) 
+    //     {
+    //         printf("%f ", matrizC_host[i*N+j]);
+    //     }
+    //     printf("\n");
+    // }
     // printf("\n%f\n", matrizC_host[(N*N)-1]); // ultimo elemento nadamas (para probar con valores grandes cuando se hace con numeros consecutivos)
 
     

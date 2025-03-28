@@ -85,6 +85,7 @@ int main(int argc, char const *argv[])
     cudaDeviceProp propiedades;
     cudaGetDeviceProperties (&propiedades,0);
     int tam_bloque= propiedades.maxThreadsPerBlock; // calcular tamaño optimo del bloque
+    // int tam_bloque= 1024; // para el ejercicio de medir tiempos de ejecucion
     int num_bloques= (N+tam_bloque-1) / tam_bloque; // calcular el numero de bloques ; N es el numero de datos (en este caso el tamaño de la matriz), la formula es universal
     // Si se quiere saber el numero de hilos maximo se multiplica tam_bloque*numero_bloques
 
@@ -117,15 +118,15 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir matriz C
-    printf("\nMatriz resultado:\n");
-    for (int i=0; i<N; i++) 
-    {
-        for (int j=0; j<N; j++) 
-        {
-            printf("%f ", matrizC_host[i*N+j]);
-        }
-        printf("\n");
-    }
+    // printf("\nMatriz resultado:\n");
+    // for (int i=0; i<N; i++) 
+    // {
+    //     for (int j=0; j<N; j++) 
+    //     {
+    //         printf("%f ", matrizC_host[i*N+j]);
+    //     }
+    //     printf("\n");
+    // }
     //printf("\n%f\n", matrizC_host[(N*N)-1]); // ultimo elemento nadamas (para probar con valores grandes cuando se hace con numeros consecutivos)
 
 
