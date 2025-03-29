@@ -35,14 +35,14 @@ tiempo_secuencial= 7.7285896 # promedio de resultados de ejecucion del algoritmo
 
 # promedio de resultados de ejecucion del algoritmo multihilado 
 hilos_cpu= [1,2,4,8,16,32]
-tiempos_cpu= [6.5250962,6.4768205,6.391268,7.0773462,6.9929188, 0.30526] #poner ejecuciones reales
+tiempos_cpu= [6.5250962,6.4768205,6.391268,7.0773462,6.9929188, 0.30526] # promedio de los tiempos
 speedup_cpu= [tiempo_secuencial / tiempo for tiempo in tiempos_cpu]
 print(speedup_cpu)
 
 
 # promedio de resultados de ejecucion del algoritmo paralelo cuda
 hilos_gpu= [64,128,256,512,1024]
-tiempos_gpu=[0.007318,0.0073942,0.0073346,0.0073764,0.0068128] #poner valores reales
+tiempos_gpu=[0.007318,0.0073942,0.0073346,0.0073764,0.0068128] # promedio de los tiempos
 speedup_gpu= [tiempo_secuencial / tiempo for tiempo in tiempos_gpu]
 print(speedup_gpu)
 
