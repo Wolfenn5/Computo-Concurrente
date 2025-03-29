@@ -13,11 +13,11 @@ Tiempos del secuencial (suma_vectores_secuencial.c):
 
 Tiempos del paralelo (suma_vectores_MIMD.c):
  1 hilo:             2 hilos:            4 hilos:            8 hilos:            16 hilos:            32 hilos:
-   6.685607            6.404634            6.369546            6.367297            6.373609
-   6.332991            6.412074            6.364882            6.450158            6.427674
-   6.389341            6.646051            6.360936            6.808293            6.711997
-   6.796591            6.397805            6.530588            6.445955            9.135444
-   6.420951            6.458792            6.330388            9.315028            6.315870
+   6.685607            6.404634            6.369546            6.367297            6.373609              0.005954
+   6.332991            6.412074            6.364882            6.450158            6.427674              0.005691
+   6.389341            6.646051            6.360936            6.808293            6.711997              0.005372
+   6.796591            6.397805            6.530588            6.445955            9.135444              0.006191
+   6.420951            6.458792            6.330388            9.315028            6.315870              1.503096
 
 
 Tiempos del paralelo, la GPU si acepta 1024 hilos por bloque (suma_vectores_cuda.cu):
@@ -35,7 +35,7 @@ tiempo_secuencial= 7.7285896 # promedio de resultados de ejecucion del algoritmo
 
 # promedio de resultados de ejecucion del algoritmo multihilado 
 hilos_cpu= [1,2,4,8,16,32]
-tiempos_cpu= [6.5250962,6.4768205,6.391268,7.0773462,6.9929188, 6.9929188] #poner ejecuciones reales
+tiempos_cpu= [6.5250962,6.4768205,6.391268,7.0773462,6.9929188, 0.30526] #poner ejecuciones reales
 speedup_cpu= [tiempo_secuencial / tiempo for tiempo in tiempos_cpu]
 print(speedup_cpu)
 
