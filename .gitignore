@@ -12,3 +12,5 @@
 !*.cu
 # para archivos de python
 !*.py
+# para imagen del programa invierte_imagen.cu
+!*.png
