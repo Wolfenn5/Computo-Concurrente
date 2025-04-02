@@ -31,7 +31,11 @@ void sumaMatrices (float *a, float *b, float *c, int filas, int columnas, int in
 
 int main(int argc, char const *argv[])
 {
-    int filas=10000, columnas=10000;
+    // Parametros del main
+    int filas= atoi(argv[1]);
+    int columnas= atoi(argv[2]);
+
+
     //float a[filas*columnas], b[filas*columnas], c[filas*columnas];
     // se cambio a apuntadores porque se pasan por referencia a sumaMatrices
     float*a=new float[filas*columnas];
@@ -95,21 +99,20 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir matriz c
-    // std::cout<<"\nLa suma de las matrices A y B es:\n";
-    // for(int i=0;i<filas;i++)
-    // {
-    //     for(int j=0; j<columnas; j++)
-    //     {
-    //         std::cout<<"["<<c[i*columnas+j]<<"]";
-    //     }
-    //     std::cout<<"\n";
-    // }
+    std::cout<<"\nLa suma de las matrices A y B es:\n";
+    for(int i=0;i<filas;i++)
+    {
+        for(int j=0; j<columnas; j++)
+        {
+            std::cout<<"["<<c[i*columnas+j]<<"]";
+        }
+        std::cout<<"\n";
+    }
 
     std::cout<<"\n\nEl tiempo de ejecucion con 2 hilos es: "<<tiempo_ejecucion.count()<<"\n";
     
     return 0;
 }
-
 
 
 
