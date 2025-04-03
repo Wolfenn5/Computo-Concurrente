@@ -34,6 +34,8 @@ int main(int argc, char const *argv[])
     // Parametros del main
     int filas= atoi(argv[1]);
     int columnas= atoi(argv[2]);
+    int num_hilos=atoi(argv[3]);
+    
 
 
     //float a[filas*columnas], b[filas*columnas], c[filas*columnas];
@@ -72,7 +74,7 @@ int main(int argc, char const *argv[])
     //     std::cout<<"\n";
     // }
     
-    int num_hilos=2;
+    
     std::vector<std::thread> hilos;
     int filas_por_hilo= filas/num_hilos;
 
