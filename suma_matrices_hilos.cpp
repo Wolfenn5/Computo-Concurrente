@@ -115,7 +115,7 @@ int main(int argc, char const *argv[])
     //     std::cout<<"\n";
     // }
 
-    std::cout<<"\n\nEl tiempo de ejecucion con 2 hilos es: "<<tiempo_ejecucion.count()<<"\n";
+    std::cout<<"\n\nEl tiempo de ejecucion con "<<num_hilos<<" hilos es: "<<tiempo_ejecucion.count()<<"\n";
     
     return 0;
 }
