@@ -5,6 +5,9 @@
 
 int main(int argc, char const *argv[])
 {
+    srand(time(NULL));
+
+
     // Parametros del main 
     int filas= atoi(argv[1]);
     int columnas= atoi(argv[2]);
@@ -20,8 +23,10 @@ int main(int argc, char const *argv[])
     // Inicializando matrices...
     for (int i=0; i<filas*columnas; i++) 
     {
-        a[i]= i+1;  // valores de 1,2,3 ...
-        b[i]= (filas*columnas)-i;  // valores de 16 ... 3,2,1
+        //a[i]= i+1; // valores de 1,2,3 ... 16 (para probar)   
+        //b[i]= (filas*columnas)-i; // valores de 16 ... 3,2,1 (para probar) 
+        a[i]= (float) rand()/RAND_MAX; // aleatorios entre 0 y 1
+        b[i]= (float) rand()/RAND_MAX; // aleatorios entre 0 y 1
     }
 
 
@@ -39,38 +44,38 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir matriz a
-    std::cout<<"Matriz a:\n";
-    for(int i=0; i<filas; i++)
-    {
-        for(int j=0; j<columnas; j++)
-        {
-            std::cout<<"["<<a[i*columnas+j]<<"]"<<" ";
-        }
-        std::cout<<"\n";
-    }
+    // std::cout<<"Matriz a:\n";
+    // for(int i=0; i<filas; i++)
+    // {
+    //     for(int j=0; j<columnas; j++)
+    //     {
+    //         std::cout<<"["<<a[i*columnas+j]<<"]"<<" ";
+    //     }
+    //     std::cout<<"\n";
+    // }
 
     // Imprimir matriz b
-    std::cout<<"\n\nMatriz b:\n";
-    for(int i=0; i<filas; i++)
-    {
-        for(int j=0; j<columnas; j++)
-        {
-            std::cout<<"["<<b[i*columnas+j]<<"]"<<" ";
-        }
-        std::cout<<"\n";
-    }
+    // std::cout<<"\n\nMatriz b:\n";
+    // for(int i=0; i<filas; i++)
+    // {
+    //     for(int j=0; j<columnas; j++)
+    //     {
+    //         std::cout<<"["<<b[i*columnas+j]<<"]"<<" ";
+    //     }
+    //     std::cout<<"\n";
+    // }
 
 
     // Imprimir matriz c
-    std::cout<<"\nLa suma de las matrices A y B es:\n";
-    for(int i=0;i<filas;i++)
-    {
-        for(int j=0; j<columnas; j++)
-        {
-            std::cout<<"["<<c[i*columnas+j]<<"]";
-        }
-        std::cout<<"\n";
-    }
+    // std::cout<<"\nLa suma de las matrices A y B es:\n";
+    // for(int i=0;i<filas;i++)
+    // {
+    //     for(int j=0; j<columnas; j++)
+    //     {
+    //         std::cout<<"["<<c[i*columnas+j]<<"]";
+    //     }
+    //     std::cout<<"\n";
+    // }
 
 
     

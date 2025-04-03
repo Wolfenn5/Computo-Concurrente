@@ -5,7 +5,6 @@
 #include <chrono>
 
 
-
 std::mutex mutex;
 
 
@@ -31,6 +30,9 @@ void sumaMatrices (float *a, float *b, float *c, int filas, int columnas, int in
 
 int main(int argc, char const *argv[])
 {
+    srand(time(NULL));
+
+
     // Parametros del main
     int filas= atoi(argv[1]);
     int columnas= atoi(argv[2]);
@@ -48,8 +50,10 @@ int main(int argc, char const *argv[])
     // Inicializando matrices...
     for(int i=0; i<filas*columnas; i++) // filas*cloumnas se puede hacer de una vez todo
     {
-        a[i]= i+1; // valores de 1,2,3 ... 16          
-        b[i]= (filas*columnas)-i; // valores de 16 ... 3,2,1
+        //a[i]= i+1; // valores de 1,2,3 ... 16 (para probar)   
+        //b[i]= (filas*columnas)-i; // valores de 16 ... 3,2,1 (para probar) 
+        a[i]= (float) rand()/RAND_MAX; // aleatorios entre 0 y 1
+        b[i]= (float) rand()/RAND_MAX; // aleatorios entre 0 y 1
     }
 
     // Imprimir matriz a
@@ -101,15 +105,15 @@ int main(int argc, char const *argv[])
 
 
     // Imprimir matriz c
-    std::cout<<"\nLa suma de las matrices A y B es:\n";
-    for(int i=0;i<filas;i++)
-    {
-        for(int j=0; j<columnas; j++)
-        {
-            std::cout<<"["<<c[i*columnas+j]<<"]";
-        }
-        std::cout<<"\n";
-    }
+    // std::cout<<"\nLa suma de las matrices A y B es:\n";
+    // for(int i=0;i<filas;i++)
+    // {
+    //     for(int j=0; j<columnas; j++)
+    //     {
+    //         std::cout<<"["<<c[i*columnas+j]<<"]";
+    //     }
+    //     std::cout<<"\n";
+    // }
 
     std::cout<<"\n\nEl tiempo de ejecucion con 2 hilos es: "<<tiempo_ejecucion.count()<<"\n";
     
