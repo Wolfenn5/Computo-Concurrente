@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
 
     // Parametros del main 
     int filas= atoi(argv[1]);
-    int columnas= atoi(argv[2]);
+    int columnas= filas;
 
 
 

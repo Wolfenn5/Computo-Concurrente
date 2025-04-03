@@ -33,10 +33,11 @@ int main(int argc, char const *argv[])
     srand(time(NULL));
 
 
-    // Parametros del main
+    // Parametros del main 
+    // --> el primer parametro es N (que resultara en el tamaño de las matrices NxN) y el 2do es el numero de hilos
     int filas= atoi(argv[1]);
-    int columnas= atoi(argv[2]);
-    int num_hilos=atoi(argv[3]);
+    int columnas= filas;
+    int num_hilos=atoi(argv[2]);
     
 
 
