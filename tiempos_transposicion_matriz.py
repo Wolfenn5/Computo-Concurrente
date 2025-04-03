@@ -32,7 +32,7 @@ plt.subplot(1,2,1) # 1 fila 2 columnas
 plt.axhline(y=tiempo_secuencial, color= 'r', linestyle='--', label='secuencial') # esta se ocupa para la ejecucion secuencial
 plt.plot(hilos_cpu, tiempos_cpu, marker='o', label= 'Multihilo CPU')
 plt.plot(hilos_gpu, tiempos_gpu, marker='s', label= 'Multihilo GPU')
-plt.title("Tiempos de ejecucion (suma de matrices")
+plt.title("Tiempos de ejecucion (transposicion de matrices)")
 plt.xlabel('Numero de hilos o numero de bloque')
 plt.ylabel('Tiempo de ejecucion promedio (s)')
 plt.grid()
