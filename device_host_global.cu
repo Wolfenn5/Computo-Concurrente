@@ -9,7 +9,7 @@
 
 __device__ void imprimeVectorDevice (int *vector)
 {
-    printf("%d "),vector[blockIdx.x * blockDim.x + threadIdx.x];
+    printf("%d ",vector[blockIdx.x * blockDim.x + threadIdx.x]);
 }
 
 
