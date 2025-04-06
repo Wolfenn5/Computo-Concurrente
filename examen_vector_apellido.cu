@@ -4,22 +4,33 @@
 #include <cuda_runtime.h>
 
 /*
-Apellido paterno: GARCIA
- La primer letra del apellido es: G (corresponde a la septima letra del abecedario)
- entonces 
- tam_vector= 7*500= 3500 elementos
 
- La ultima letra es: A (corresponde a la primer letra del abecedario)
- entonces 
- num_hilos_por_bloque= 1*4= 4
+El apellido paterno es: GARCIA
+La primer letra del apellido es: G, la cual corresponde a la séptima letra del abecedario. Por restricción del problema, el tamaño de vector va de acuerdo con la primera letra multiplicada por 500. La letra “G” corresponde a la séptima letra del abecedario entonces el tamaño del vector es de 3500 elementos dada de la siguiente forma:
+
+tam_vector= 7*500= 3500 elementos
+
+
+
+La última letra del apellido paterno es: A, la cual corresponde a la primer letra del abecedario. Por restricción del problema, el número de hilos va de acuerdo con la última letra multiplicada por 4. La letra “A” corresponden a la primer letra del abecedario entonces el número de hilos por bloque es de 4 dada de la siguiente forma:
+
+num_hilos_por_bloque= 1*4= 4 hilos
 
  
 
-tambloque= 4 por lo anteriormente calculado y restriccion del problema seran 4 hilos solamente por bloque
-entonces
-numbloques= (N+tambloque-1) / tambloque    -->   donde tambloque=4 y N= 3500 
+El tamaño del bloque (tambloque= 4) es de 4, debido a que en CUDA el tamaño de bloque es el número de hilos por bloque en si. Lo cual fue calculado en el paso anterior.
+
+
+Teniendo el tamaño del bloque, para calcular el numero de bloques necesario se utilizo la formula vista en clase
+numbloques= (N+tambloque-1) / tambloque           
+donde 
+tambloque=4 y N= 3500 
+
+
 entonces
 numbloques= (3500+4-1) / 4 = 875
+el numero de bloques a utilizar sera de 875.
+
 */
 
 // Nota: Se hicieron pruebas por ejemplo con tam_vector de 10 (elementos) y se noto que si bien hacia el calculo, imprimia de forma incorrecta, asi que se determino que el programa solo funciona con el tamaño de vectores,numero de bloque y tamaño de bloque previamente calculados
@@ -39,8 +50,8 @@ __global__ void MultiplicarVectores (int * vectorA_dispositivo, int * vectorB_di
 
 int main(int argc, char const *argv[])
 {
-    int tam_vector= 3500; 
-    // int tam_vector= 10; // tamaño de 10 (para probar)
+    // Parametro del main para el tamaño del vector
+    int tam_vector= atoi(argv[1]); 
 
     srand(time(NULL)); // para utilizar valores aleatorios 
 
@@ -112,7 +123,25 @@ int main(int argc, char const *argv[])
 
 
 
-    printf("\nLos primeros 5 elementos son:\n");
+    // printf("\nEl vector A es:\n");
+    // for (int i=0; i<tam_vector; i++)
+    // {
+    //     printf("%d ", vectorA_host[i]);
+    // }
+    // printf("\n");
+
+
+
+    // printf("\nEl vector B es:\n");
+    // for (int i=0; i<tam_vector; i++)
+    // {
+    //     printf("%d ", vectorB_host[i]);
+    // }
+    // printf("\n");
+
+
+
+    printf("\n\nLos primeros 5 elementos del vector resultante C son:\n");
     for (int i=0; i<5; i++)
     {
         printf("%d ", vectorC_host[i]);
@@ -121,7 +150,7 @@ int main(int argc, char const *argv[])
 
 
 
-    printf("\nLos ultimos 5 elementos son:\n");
+    printf("\nLos ultimos 5 elementos del vector resultante C son:\n");
     for (int i=tam_vector-5; i<tam_vector; i++)
     {
         printf("%d ", vectorC_host[i]);
