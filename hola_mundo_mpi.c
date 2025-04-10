@@ -3,8 +3,9 @@
 
 /* Compilacion y ejecucion del programa que utilza mpi
 
-mpicc hola_mpi.c -o hola_mpi
-mpirun -np 4 ./hola_mpi       con 4 procesos
+mpicc hola_mundo_mpi.c -o hola_mundo_mpi
+mpirun -np 4 ./mpi       con 4 procesos       ó
+mpiexec -n 4 ./mpi
 
 */
 
