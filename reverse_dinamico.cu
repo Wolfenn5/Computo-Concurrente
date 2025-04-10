@@ -11,18 +11,19 @@ __device__ void imprimeVectorDevice (int*d)
 }
 
 
-__global__ void reverse_dinamico (int *d, int n)
-{
-    // La directiva __shared__ sirve para especificar que la variable va a ser almacenada en el SM (shared memmory)
-    extern __shared__ int s[];
-    int t= blockIdx.x * blockDim.x + threadIdx.x;
-    int tr= n - t - 1; //la posision contraria a t  Si n es 1000 cuando t es 0   tr= 1000-0-1=999  por los arreglos que empieza desde 0 hasta n-1    si t=999  tr= 1000-999-1=0
-    // Copiar desde el device (RAM de la GPU) hasta el SM
-    s[t]= d[t];
-
-    __syncthreads(); // esperar a que cada uno de los hilos termine de acceder a memoria compartida
-    d[t]= s[tr]; // copiar cruzado
-    imprimeVectorDevice(d);
+__global__ void reverse_dinamico(int *d, int n){
+	extern __shared__ int s[]; //la directiva shared nos ayuda a especificar que la variable va a ser almacenada en el Streaming Multiprocessor (bloque)
+	int t = blockIdx.x*blockDim.x+threadIdx.x;
+	int local = threadIdx.x;
+	//printf("\n Id global %d y el Id local %d\n",t,local);
+	if(t < n){
+		//int tr = n - t -1; //la posicion contraria a "t"
+		//copiamos desde el device (RAM de la GPU) hacia el SM
+		s[local]=d[t];
+		__syncthreads();//esperamos a que cada uno de los hilos termine de acceder a la memoria compartida
+		d[t]=s[blockDim.x-local-1];//copiamos cruzado
+		//imprimeVectorDevice(d);
+	}
 }
 
 

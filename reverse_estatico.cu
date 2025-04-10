@@ -16,13 +16,16 @@ __global__ void reverse_estatico (int *d, int n)
     // La directiva __shared__ sirve para especificar que la variable va a ser almacenada en el SM (shared memmory)
     __shared__ int s[1000];
     int t= blockIdx.x * blockDim.x + threadIdx.x;
-    int tr= n - t - 1; //la posision contraria a t  Si n es 1000 cuando t es 0   tr= 1000-0-1=999  por los arreglos que empieza desde 0 hasta n-1    si t=999  tr= 1000-999-1=0
-    // Copiar desde el device (RAM de la GPU) hasta el SM
-    s[t]= d[t];
+    if (t<n)
+    {
+        int tr= n - t - 1; //la posision contraria a t  Si n es 1000 cuando t es 0   tr= 1000-0-1=999  por los arreglos que empieza desde 0 hasta n-1    si t=999  tr= 1000-999-1=0
+        // Copiar desde el device (RAM de la GPU) hasta el SM
+        s[t]= d[t];
 
-    __syncthreads(); // esperar a que cada uno de los hilos termine de acceder a memoria compartida
-    d[t]= s[tr]; // copiar cruzado
-    imprimeVectorDevice(d);
+        __syncthreads(); // esperar a que cada uno de los hilos termine de acceder a memoria compartida
+        d[t]= s[tr]; // copiar cruzado
+        imprimeVectorDevice(d);
+    }
 }
 
 
