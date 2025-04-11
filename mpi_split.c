@@ -10,6 +10,14 @@ mpiexec -n 4 ./mpi
 
 Con el lcluster y la lista de nodos en el /home/rober/lista_nodos.txt
 mpiexec -n 4 --hostfile /home/rober/lista_nodos.txt ./mpi
+
+
+
+
+Para subir archivos hay que escribir:
+
+nano nombre_programa 
+y pegar el contenido del programa, guardarlo y ya estando en un nodo se compila y ejecuta
 */
 
 
