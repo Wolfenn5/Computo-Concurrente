@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(comunicador_fila, &rank_local);
     MPI_Comm_size(comunicador_fila, &size_local);
 
-    printf("\nSoy el proceso %d de %d y me estoy ejecutando en el comunicador %s\n", rank_local,size_local, fila_id);
+    printf("\nSoy el proceso %d de %d y me estoy ejecutando en el comunicador %d\n", rank_local,size_local, fila_id);
 
 
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
 
     if (rank_local==0)
     {
-        printf("\nLa suma de los IDs de mis amigos de la fila %d es: %d", fila_id, suma);
+        printf("\nLa suma de los IDs de mis amigos de la fila %d es: %d\n", fila_id, suma);
     }
     
     

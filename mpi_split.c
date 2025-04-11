@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(comunicador_fila, &rank_local);
     MPI_Comm_size(comunicador_fila, &size_local);
 
-    printf("\nSoy el proceso %d de %d y me estoy ejecutando en el comunicador %s\n", rank_local,size_local, fila_id);
+    printf("\nSoy el proceso %d de %d y me estoy ejecutando en el comunicador %d\n", rank_local,size_local, fila_id);
     MPI_Finalize();
     return 0;
 }
