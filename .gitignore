@@ -14,3 +14,5 @@
 !*.py
 # para imagen del programa invierte_imagen.cu
 !*.png
+# Para los nodos del cluster
+!*.txt

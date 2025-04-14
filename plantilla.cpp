@@ -2,6 +2,29 @@
 // Compilar en mac             --> clang++ -std=c++11 -lpthread nombre.cpp -o nombre  solo clang si es en c
 
 
+/* -------------- CLUSTER DEL SERVIDOR FSOFT -------------- */
+/* Compilacion y ejecucion del programa que utilza mpi
+
+mpicc nombre_programa.c -o nombre_programa
+mpirun -np 4 ./nombre_programa       con 4 procesos       ó
+mpiexec -n 4 ./nombre_programa
+
+
+Con el lcluster y la lista de nodos en el /home/rober/lista_nodos.txt
+mpiexec -n 4 --hostfile lista_nodos.txt ./nombre_programa
+
+
+
+
+Para subir archivos hay que escribir:
+
+nano nombre_programa 
+y pegar el contenido del programa, guardarlo y ya estando en un nodo se compila y ejecuta
+*/
+
+
+
+
 /* -------------- CUDA -------------- */
 /*Calcular el numero de bloques necesario para cubrir 1 millon de elementos con un tamaño de bloque de 1024 hilos
 int N= 1000000000;
