@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     else
     {
         char nombre_receptor[MPI_MAX_PROCESSOR_NAME];
-        MPI_Recv(&nombre_receptor,longitud,MPI_CHAR,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
+        MPI_Recv(&nombre_receptor,MPI_MAX_PROCESSOR_NAME,MPI_CHAR,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
         printf("\nEl proceso %d recibio el mensaje %s\n",rank,nombre_receptor);
     }
 

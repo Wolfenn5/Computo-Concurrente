@@ -24,7 +24,7 @@ y pegar el contenido del programa, guardarlo y ya estando en un nodo se compila 
 */
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     srand(time(NULL));
     int rank, size, longitud;
@@ -38,13 +38,12 @@ int main(int argc, char **argv)
         int aleatorio;
         for (int i=1; i<size; i++)
         {
-            char nombre_host[MPI_MAX_PROCESSOR_NAME];
             aleatorio= 1+rand()%10;
-            MPI_Send(&aleatorio,MPI_MAX_PROCESSOR_NAME,MPI_INT,i,0,MPI_COMM_WORLD); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
+            MPI_Send(&aleatorio,1,MPI_INT,i,0,MPI_COMM_WORLD); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
             printf("\nEnviamos el numero %d desde el proceso %d al proceso %d\n",aleatorio,rank,i);
         }
         // Una vez que se envia, hay que esperar a que todos tengan su calculo
-        for (int i=0; i<size; i++)
+        for (int i=1; i<size; i++)
         {
             MPI_Recv(&aleatorio,1,MPI_INT,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             printf("\nRecibimos el mensaje del proceso %d con el numero %d\n",i,aleatorio);
@@ -55,11 +54,11 @@ int main(int argc, char **argv)
     else
     {
         int aleatorio;
-        MPI_Recv(&aleatorio,MPI_MAX_PROCESSOR_NAME,MPI_INT,0,0,MPI_COMM_WORLD, MPI_STATUS_IGNORE); //variable que se va a enviar, el tamaño de la variable, tipo caracter de MPI, identificador del proceso, etiqueta del mensaje
+        MPI_Recv(&aleatorio,1,MPI_INT,0,0,MPI_COMM_WORLD, MPI_STATUS_IGNORE); //variable que se va a enviar, el tamaño de la variable, tipo caracter de MPI, identificador del proceso, etiqueta del mensaje
         printf("\nEl proceso %d recibio el mensaje %d\n",rank,aleatorio);
         int cuadrado=pow(aleatorio,2);
         MPI_Send(&cuadrado,1,MPI_INT,0,0,MPI_COMM_WORLD);
-        printf("\nEnviamos el mensaje %d desde el proceso %d",cuadrado,rank);
+        printf("\nEnviamos el mensaje %d desde el proceso %d\n",cuadrado,rank);
     }
 
     MPI_Finalize();

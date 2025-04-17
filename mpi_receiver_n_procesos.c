@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         for (int i=1; i<size; i++)
         {
             char nombre_host[MPI_MAX_PROCESSOR_NAME];
-            MPI_Recv(&nombre_host,longitud,MPI_CHAR,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
+            MPI_Recv(&nombre_host,MPI_MAX_PROCESSOR_NAME,MPI_CHAR,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE); //donde se va a guardar,tamaño del mensaje, tipo de mensaje, de donde viene, etiqueta, comunicador, ignorar el estado porque en la misma funcion se tienen los datos de cada proceso
             printf("\nEl proceso %d recibio el mensaje %s desde el proceso %d\n",rank,nombre_host,i);
         }
     }
