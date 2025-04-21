@@ -39,6 +39,7 @@ int esPotencia (int size)
 }
 
 
+
 int main(int argc, char *argv[])
 {
     int rank, size;
