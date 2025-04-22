@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <mpi.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <stdlib.h>
 
 /* Compilacion y ejecucion del programa que utilza mpi
@@ -34,32 +34,52 @@ int main(int argc, char *argv[])
 
     // Parametro del main para indicar el tamaño del arreglo
     int N= atoi(argv[1]);
-    int arreglo[N];
+    int *arreglo;
+    int base= N/(size-1);
+    int sobrante= N%(size-1);
 
-    if (size == 3) //que solo funcione con 3 procesos
+    if (rank == 0) // si el rank es 0 entonces es el maestro y debe designar trabajo
     {
-        if (rank == 0) // si el rank es 0 entonces es el maestro y debe designar trabajo
+        int valorReal=base;
+        arreglo= (int *)malloc(sizeof(int)*N);
+        for (int i=0; i<N; i++)
         {
-            for (int i=0; i<N; i++)
-            {
-                arreglo[i]= i+1;
-            }
-            MPI_Send(arreglo+0,N/2,MPI_INT,1,0,MPI_COMM_WORLD);
-            MPI_Send(arreglo+N,N/2,MPI_INT,1,0,MPI_COMM_WORLD);
+            arreglo[i]= i+1;
         }
-        else
-        {
-            int subarreglo[N/2];
-            MPI_Recv(subarreglo,N/2,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-            printf("\nSoy el proceso %d y recibi:\n",rank);
-            for (int i=0; i<N/2; i++)
-            {
-                printf("%d ",subarreglo[i]);
-            }
-            printf("\n");
-        }
-    }
 
+        int offset=0; // contador
+        for (int i=0; i<size-1; i++)
+        {
+            if (i+1 <= sobrante)
+            {
+                valorReal= base+1;
+            }            
+            else
+            {
+                valorReal= base;
+            }
+            printf("\nMe tocan %d valores", valorReal);
+            MPI_Send(arreglo + offset, valorReal, MPI_INT, i+1, 0, MPI_COMM_WORLD);
+            offset+= valorReal; // actualizar el valor del contador
+        }
+        
+    }
+    else // chalanes
+    {
+        int valorReal=base;
+        if (rank <= sobrante)
+        {
+            valorReal= base+1;
+        }
+        arreglo= (int *)malloc(sizeof(int)*valorReal);
+        MPI_Recv(arreglo,valorReal,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        printf("\nSoy el proceso %d y recibi:\n",rank);
+        for (int i=0; i<valorReal; i++)
+        {
+            printf("%d ",arreglo[i]);
+        }
+        printf("\n");
+    }
 
 
     MPI_Finalize();

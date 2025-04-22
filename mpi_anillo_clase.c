@@ -66,10 +66,16 @@ int main(int argc, char *argv[])
         else // si es impar envia
         {
             MPI_Send(nombre,MPI_MAX_PROCESSOR_NAME,MPI_CHAR,rank-1,0,MPI_COMM_WORLD);
-            printf("\nSoy el proceso %d y envie el mensaje al proceso %d%s\n",rank,nombre,rank-1);
+            printf("\nSoy el proceso %d y envie el mensaje al proceso %s %d\n",rank,nombre,rank-1);
         }
+        MPI_Finalize();
     }
+    else
+    {
+		printf("\nEl número de procesos debe ser par y >= 4\n");
+		MPI_Finalize();
+		return 1;
+	}
     
-    
-    MPI_Finalize();
+    return 0;
 }
