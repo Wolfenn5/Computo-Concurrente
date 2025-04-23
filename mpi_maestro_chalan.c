@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     if (rank == 0) // si el rank es 0 entonces es el maestro y debe designar trabajo
     {
         int valorReal=base;
+        int suma=0;
+        int sumaParcial=0;
         arreglo= (int *)malloc(sizeof(int)*N);
         for (int i=0; i<N; i++)
         {
@@ -62,11 +64,18 @@ int main(int argc, char *argv[])
             MPI_Send(arreglo + offset, valorReal, MPI_INT, i+1, 0, MPI_COMM_WORLD);
             offset+= valorReal; // actualizar el valor del contador
         }
+        for (int i=0; i<size; i++)
+        {
+            MPI_Recv(&sumaParcial,1,MPI_INT,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            suma+=sumaParcial;
+        }
+        printf("\nLa suma total es: %d\n",suma);
         
     }
     else // chalanes
     {
         int valorReal=base;
+        int sumaParcial= 0;
         if (rank <= sobrante)
         {
             valorReal= base+1;
@@ -77,8 +86,11 @@ int main(int argc, char *argv[])
         for (int i=0; i<valorReal; i++)
         {
             printf("%d ",arreglo[i]);
+            sumaParcial+= arreglo[i];
         }
         printf("\n");
+        printf("\nLa suma parcial de mis elementos es: %d\n",sumaParcial);
+        MPI_Send(&sumaParcial,1,MPI_INT,0,0,MPI_COMM_WORLD);
     }
 
 
