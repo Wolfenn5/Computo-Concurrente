@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             MPI_Send(arreglo + offset, valorReal, MPI_INT, i+1, 0, MPI_COMM_WORLD);
             offset+= valorReal; // actualizar el valor del contador
         }
-        for (int i=0; i<size; i++)
+        for (int i=1; i<size; i++)
         {
             MPI_Recv(&sumaParcial,1,MPI_INT,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             suma+=sumaParcial;

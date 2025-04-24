@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
         int mensaje;
         MPI_Irecv(&mensaje,1,MPI_INT,0,0,MPI_COMM_WORLD,&request);
         int a=7, b=5;
-        printf("\nSoy el proceso %d y no me importa si ya recibi el mensaje %d\n",rank, mensaje);
         MPI_Wait(&request,&status); // si el wait va aqui siempre va a recibir el mensaje
+        printf("\nSoy el proceso %d y no me importa si ya recibi el mensaje %d\n",rank, mensaje);
         printf("\nLa suma de los valores que tengo es: %d\n",a+b);
         //MPI_Wait(&request,&status); // si el wait va aqui puede que no reciba el mensaje
         printf("\nSoy el proceso %d y recibi el mensaje %d\n",rank,mensaje);
