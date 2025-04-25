@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         }
         for (int i=1; i<size; i++)
         {
-            MPI_Recv(&sumaParcial,1,MPI_INT,i,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Recv(&sumaParcial,1,MPI_INT,MPI_ANY_SOURCE,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             suma+=sumaParcial;
         }
         printf("\nLa suma total es: %d\n",suma);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
             valorReal= base+1;
         }
         arreglo= (int *)malloc(sizeof(int)*valorReal);
-        MPI_Recv(arreglo,valorReal,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        MPI_Recv(arreglo,valorReal,MPI_INT,MPI_ANY_SOURCE,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         printf("\nSoy el proceso %d y recibi:\n",rank);
         for (int i=0; i<valorReal; i++)
         {
