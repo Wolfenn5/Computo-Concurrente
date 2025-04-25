@@ -31,13 +31,13 @@ __device__ void swap(int *a, int *b){
     *b = tmp;
 }
 
-__device__ void shuffle(int *tour, int n){
-    for(int i = 0; i < n; i++) tour[i] = i;
-    for(int i = 0; i < n; i++){
-        int j = rand() % n;
-        swap(&tour[i], &tour[j]);
-    }
-}
+// __device__ void shuffle(int *tour, int n){
+//     for(int i = 0; i < n; i++) tour[i] = i;
+//     for(int i = 0; i < n; i++){
+//         int j = rand() % n;
+//         swap(&tour[i], &tour[j]);
+//     }
+// }
 
 
 __global__ void simulated_annealing_kernel(TSPData *data, int *best_tours, double *best_costs, int max_iter) {
