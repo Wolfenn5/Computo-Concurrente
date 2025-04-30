@@ -75,6 +75,19 @@ double evaluar_tour(int *tour, double matrizDistancia[MAX_CITIES][MAX_CITIES]) /
 }
 
 
+void generaVecino (int * tour)
+{
+	int i= rand() % MAX_CITIES;
+	int j= rand() % MAX_CITIES;
+	while (i == j)
+	{
+		j= rand() % MAX_CITIES;
+	}
+	int temporal= tour[i];
+	tour[i]= tour[j];
+	tour[j]= temporal;
+}
+
 int main(int argc, char * argv[]){
 	srand(time(NULL));
 	MPI_Init(&argc, &argv);
@@ -85,6 +98,7 @@ int main(int argc, char * argv[]){
 	double matrizDistancia[MAX_CITIES][MAX_CITIES];
 	double resultado=1e9; //darle un valor grande para que al final, no tome el 0 como minimo e imprima 0 o valores basura
 	//vamos a generar una solucion "inicial"
+	double resultado_vecino;
 	int solucion[MAX_CITIES];
 	srand(time(NULL)+rank);
 	if (rank == 0)
@@ -97,9 +111,25 @@ int main(int argc, char * argv[]){
 	
 	if (rank != 0)
 	{
+		int vecino[MAX_CITIES];
 		generaTour(solucion); // generar tour aleatorio pero es necesario tambien evaluar la solucion (funcion objetivo)
+		for (int i=0; i<MAX_CITIES; i++)
+		{
+			vecino[i]=solucion[i];
+		}
 		resultado= evaluar_tour(solucion,matrizDistancia);
 		printf("\nEl costo de la funcion objetivo es: %lf\n",resultado);
+		resultado_vecino= evaluar_tour(solucion,matrizDistancia);
+		printf("\nEl costo de la funcion objetivo del vecino es: %lf\n",resultado_vecino);
+		if (resultado_vecino < resultado)
+		{
+			for (int i=0; i<MAX_CITIES; i++)
+			{
+				solucion[i]= vecino[i];
+				resultado= resultado_vecino;
+			}
+		}
+		
 	}
 	double mejor_costo;
 	MPI_Reduce(&resultado, &mejor_costo,1,MPI_DOUBLE,MPI_MIN,0,MPI_COMM_WORLD);
