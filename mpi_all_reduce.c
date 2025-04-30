@@ -95,6 +95,7 @@ int main(int argc, char * argv[]){
 	instancia data;
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 	MPI_Comm_size(MPI_COMM_WORLD,&size);
+	int numIteraciones= atoi(argv[i]);
 	double matrizDistancia[MAX_CITIES][MAX_CITIES];
 	double resultado=1e9; //darle un valor grande para que al final, no tome el 0 como minimo e imprima 0 o valores basura
 	//vamos a generar una solucion "inicial"
@@ -113,29 +114,53 @@ int main(int argc, char * argv[]){
 	{
 		int vecino[MAX_CITIES];
 		generaTour(solucion); // generar tour aleatorio pero es necesario tambien evaluar la solucion (funcion objetivo)
-		for (int i=0; i<MAX_CITIES; i++)
-		{
-			vecino[i]=solucion[i];
-		}
-		resultado= evaluar_tour(solucion,matrizDistancia);
-		printf("\nEl costo de la funcion objetivo es: %lf\n",resultado);
-		resultado_vecino= evaluar_tour(solucion,matrizDistancia);
-		printf("\nEl costo de la funcion objetivo del vecino es: %lf\n",resultado_vecino);
-		if (resultado_vecino < resultado)
+		for (int iter=0; iter<numIteraciones; iter++)
 		{
 			for (int i=0; i<MAX_CITIES; i++)
 			{
-				solucion[i]= vecino[i];
-				resultado= resultado_vecino;
+				vecino[i]=solucion[i];
+			}
+			resultado= evaluar_tour(solucion,matrizDistancia);
+			//printf("\nEl costo de la funcion objetivo es: %lf\n",resultado);
+			resultado_vecino= evaluar_tour(solucion,matrizDistancia);
+			//printf("\nEl costo de la funcion objetivo del vecino es: %lf\n",resultado_vecino);
+			if (resultado_vecino < resultado)
+			{
+				for (int i=0; i<MAX_CITIES; i++)
+				{
+					solucion[i]= vecino[i];
+					resultado= resultado_vecino;
+				}
 			}
 		}
-		
 	}
 	double mejor_costo;
-	MPI_Reduce(&resultado, &mejor_costo,1,MPI_DOUBLE,MPI_MIN,0,MPI_COMM_WORLD);
+	// generar un struct con 2 valores resultado y rank usando mpi_minloc
+	// lo que hace minloc es trabajar con un par de valores donde el primero es el que se compara y se le asocia el valor del rank
+	struct 
+	{
+		double valor;
+		int rank;
+	}local,global;
+	local.valor= resultado;
+	local.rank= rank;
+
+	MPI_Reduce(&local, &global,1,MPI_DOUBLE_INT,MPI_MINLOC,0,MPI_COMM_WORLD);
+	int mejorTour[MAX_CITIES];
+	if (rank == global.rank)
+	{
+		MPI_Send(solucion, MAX_CITIES, MPI_INT, 0,0, MPI_COMM_WORLD);
+	}
+	
 	if (rank == 0)
 	{
-		printf("\nEl mejor costo de todos los procesos es: %lf\n",mejor_costo);
+		MPI_Recv(mejorTour, MAX_CITIES, MPI_INT, global.rank,0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		printf("\nEl mejor costo de todos los procesos es: %lf\n",global.valor);
+		for (int i=0; i<MAX_CITIES; i++)
+		{
+			printf("%d-> ", mejorTour[i]);
+		}
+		printf("d\n",mejorTour[0]);
 	}
 	
 
