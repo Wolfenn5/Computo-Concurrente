@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <mpi.h>
+#include <mpi.h>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
@@ -62,20 +62,52 @@ void generaTour(int arreglo[MAX_CITIES]){
 	printf("%d\n",arreglo[0]);
 }
 
+
+double evaluar_tour(int *tour, double matrizDistancia[MAX_CITIES][MAX_CITIES]) // recibe un arreglo con el orden de visita de los lugares (tour) y la matriz de distancia para poder sumar el valor etre cada ciudad
+{
+	double costo= 0.0; // variable para sumar los costos de los caminos que existen en el tour
+	for (int i=0; i<MAX_CITIES-1; i++)
+	{
+		costo+= matrizDistancia[tour[i]][tour[i+1]];
+	}
+	costo+=matrizDistancia[tour[MAX_CITIES-1]][tour[0]];
+	return costo;
+}
+
+
 int main(int argc, char * argv[]){
 	srand(time(NULL));
-	//MPI_Init(&argc, &argv);
+	MPI_Init(&argc, &argv);
 	int rank, size;
 	instancia data;
-	//MPI_Comm_rank(MPI_COMM_WORLD,&rank);
-	//MPI_Comm_size(MPI_COMM_WORLD,&size);
-	leerInstancia(&data);//la instancia son los datos del problema que queremos resolver (en el problema ustedes tienen archivos ".tsp")
-
+	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+	MPI_Comm_size(MPI_COMM_WORLD,&size);
 	double matrizDistancia[MAX_CITIES][MAX_CITIES];
-	calcularDistancia(matrizDistancia,data);//aqui nosotros tenemos la matriz hecha
+	double resultado=1e9; //darle un valor grande para que al final, no tome el 0 como minimo e imprima 0 o valores basura
 	//vamos a generar una solucion "inicial"
 	int solucion[MAX_CITIES];
-	generaTour(solucion);
+	srand(time(NULL)+rank);
+	if (rank == 0)
+	{
+		calcularDistancia(matrizDistancia,data);//aqui nosotros tenemos la matriz hecha
+		leerInstancia(&data);//la instancia son los datos del problema que queremos resolver (en el problema ustedes tienen archivos ".tsp")
+	}
+
+	MPI_Bcast(matrizDistancia,MAX_CITIES*MAX_CITIES, MPI_DOUBLE,0,MPI_COMM_WORLD);
 	
-//	MPI_Finalize();
+	if (rank != 0)
+	{
+		generaTour(solucion); // generar tour aleatorio pero es necesario tambien evaluar la solucion (funcion objetivo)
+		resultado= evaluar_tour(solucion,matrizDistancia);
+		printf("\nEl costo de la funcion objetivo es: %lf\n",resultado);
+	}
+	double mejor_costo;
+	MPI_Reduce(&resultado, &mejor_costo,1,MPI_DOUBLE,MPI_MIN,0,MPI_COMM_WORLD);
+	if (rank == 0)
+	{
+		printf("\nEl mejor costo de todos los procesos es: %lf\n",mejor_costo);
+	}
+	
+
+	MPI_Finalize();
 }
