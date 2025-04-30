@@ -4,6 +4,7 @@
 #include <time.h>
 #include <string.h>
 #include <cuda_runtime.h>
+#include <curand_kernel.h>
 #define MAX_CITIES 1000
 
 typedef struct {
@@ -31,6 +32,9 @@ __device__ void swap(int *a, int *b){
     *b = tmp;
 }
 
+
+
+
 // __device__ void shuffle(int *tour, int n){
 //     for(int i = 0; i < n; i++) tour[i] = i;
 //     for(int i = 0; i < n; i++){
@@ -39,18 +43,48 @@ __device__ void swap(int *a, int *b){
 //     }
 // }
 
+__device__ void shuffle(int *tour, int n, curandState *state) {
+    for(int i = 0; i < n; i++) tour[i] = i;
+    for(int i = 0; i < n; i++) {
+        int j = curand(state) % n;
+        int tmp = tour[i];
+        tour[i] = tour[j];
+        tour[j] = tmp;
+    }
+}
 
-__global__ void simulated_annealing_kernel(TSPData *data, int *best_tours, double *best_costs, int max_iter) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+__global__ void kernel_simulated_annealing(TSPData *data, int *best_tours, double *best_costs, int max_iter, unsigned long seed) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     
+
+
+    // Inicializar el estado del generador curand
+    curandState state;
+    curand_init(seed, tid, 0, &state); // 1234 es una semilla, tid es el id unico de hilo
+
+
+
+
     // Cada hilo tendrá su propio tour y estado
     int current_tour[MAX_CITIES];
+    shuffle(current_tour, data->num_cities, &state);
     double temp = 1000.0;
     double alpha = 0.995;
     
-    // Inicializar tour
-    for(int i = 0; i < data->num_cities; i++) current_tour[i] = i;
-    
+
     // Funcion shuffle, se quito porque shuffle llama a swap y llamar de device entre device no se puede
     // for(int i = 0; i < n; i++) tour[i] = i;
     // for(int i = 0; i < n; i++){
@@ -58,11 +92,18 @@ __global__ void simulated_annealing_kernel(TSPData *data, int *best_tours, doubl
     //     swap(&tour[i], &tour[j]);
     // }
 
-    for(int i = 0; i < data->num_cities; i++) {
-        int j = (tid * 100 + i) % data->num_cities; // Pseudo-aleatorio basado en tid que es el id del hilo
-        swap(&current_tour[i], &current_tour[j]);
-    }
     
+
+    // // Inicializar tour
+    // for(int i = 0; i < data->num_cities; i++) current_tour[i] = i;
+    // {
+    //     // Shuffle
+    //     for(int i = 0; i < data->num_cities; i++) 
+    //     {
+    //         int j = (tid * 100 + i) % data->num_cities; // Pseudo-aleatorio basado en tid que es el id del hilo
+    //         swap(&current_tour[i], &current_tour[j]);
+    //     }
+    // }
 
 
     
@@ -76,15 +117,15 @@ __global__ void simulated_annealing_kernel(TSPData *data, int *best_tours, doubl
     
     // Algoritmo de simulated annealing
     for(int iter = 0; iter < max_iter; iter++) {
-        int i = (tid * 100 + iter) % data->num_cities; // Pseudo-aleatorio
-        int j = (tid * 200 + iter) % data->num_cities; // Pseudo-aleatorio
+        // Generar indices aleatorios i y j usando curand
+        int i = curand(&state) % data->num_cities;
+        int j = curand(&state) % data->num_cities;
         swap(&current_tour[i], &current_tour[j]);
         
         double new_cost = total_distance(data, current_tour);
         
         // Criterio de aceptación
-        if(new_cost < current_cost || 
-           exp((current_cost - new_cost) / temp) > (double)((tid + iter) % 1000) / 1000.0) {
+        if(new_cost < current_cost || exp((current_cost - new_cost) / temp) > curand_uniform(&state)){
             current_cost = new_cost;
             // Actualizar mejor tour
             for(int k = 0; k < data->num_cities; k++) {
@@ -128,7 +169,8 @@ void simulated_annealing(TSPData *data, int *best_tour) {
     cudaMemcpy(d_data, data, sizeof(TSPData), cudaMemcpyHostToDevice);
     
     // Lanzar kernel
-    simulated_annealing_kernel<<<num_blocks, num_threads>>>(d_data, d_best_tours, d_best_costs, 100000);
+    unsigned long seed = time(NULL);
+    kernel_simulated_annealing<<<num_blocks, num_threads>>>(d_data, d_best_tours, d_best_costs, 100000, seed);
     
     // Copiar resultados de vuelta al host
     int *host_best_tours = (int*)malloc(num_threads * data->num_cities * sizeof(int));
