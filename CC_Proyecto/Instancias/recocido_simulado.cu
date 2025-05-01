@@ -32,17 +32,6 @@ __device__ void swap(int *a, int *b){
     *b = tmp;
 }
 
-
-
-
-// __device__ void shuffle(int *tour, int n){
-//     for(int i = 0; i < n; i++) tour[i] = i;
-//     for(int i = 0; i < n; i++){
-//         int j = rand() % n;
-//         swap(&tour[i], &tour[j]);
-//     }
-// }
-
 __device__ void shuffle(int *tour, int n, curandState *state) {
     for(int i = 0; i < n; i++) tour[i] = i;
     for(int i = 0; i < n; i++) {
@@ -56,67 +45,34 @@ __device__ void shuffle(int *tour, int n, curandState *state) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-__global__ void kernel_simulated_annealing(TSPData *data, int *best_tours, double *best_costs, int max_iter, unsigned long seed) {
-    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+__global__ void kernel_simulated_annealing(TSPData *data, int *best_tours, double *best_costs, int max_iter, unsigned long seed) 
+{
+    int idHilo = blockIdx.x * blockDim.x + threadIdx.x;
     
-
-
-    // Inicializar el estado del generador curand
+    // Inicializar el estado del generador curand (para aleatoiros)
     curandState state;
-    curand_init(seed, tid, 0, &state); // 1234 es una semilla, tid es el id unico de hilo
+    curand_init(seed, idHilo, 0, &state); // semilla, idHilo es el id unico de hilo
 
 
-
-
-    // Cada hilo tendrá su propio tour y estado
+    // Cada hilo tendrá su propio tour y estado (semilla para aleatorios)
     int current_tour[MAX_CITIES];
     shuffle(current_tour, data->num_cities, &state);
     double temp = 1000.0;
     double alpha = 0.995;
-    
-
-    // Funcion shuffle, se quito porque shuffle llama a swap y llamar de device entre device no se puede
-    // for(int i = 0; i < n; i++) tour[i] = i;
-    // for(int i = 0; i < n; i++){
-    //     int j = rand() % n;
-    //     swap(&tour[i], &tour[j]);
-    // }
-
-    
-
-    // // Inicializar tour
-    // for(int i = 0; i < data->num_cities; i++) current_tour[i] = i;
-    // {
-    //     // Shuffle
-    //     for(int i = 0; i < data->num_cities; i++) 
-    //     {
-    //         int j = (tid * 100 + i) % data->num_cities; // Pseudo-aleatorio basado en tid que es el id del hilo
-    //         swap(&current_tour[i], &current_tour[j]);
-    //     }
-    // }
-
-
-    
     double current_cost = total_distance(data, current_tour);
     
+
     // Copiar a mejor tour inicial
-    for(int i = 0; i < data->num_cities; i++) {
-        best_tours[tid * data->num_cities + i] = current_tour[i];
+    for(int i = 0; i < data->num_cities; i++) 
+    {
+        best_tours[idHilo * data->num_cities + i] = current_tour[i]; // en vez de best_tour[i], se calcula el indice a partir del id del hilo
     }
-    best_costs[tid] = current_cost;
+    best_costs[idHilo] = current_cost; // best cost se usa para mandar el toru con menor costo despues al host
     
+
     // Algoritmo de simulated annealing
-    for(int iter = 0; iter < max_iter; iter++) {
+    for(int iter = 0; iter < max_iter; iter++) 
+    {
         // Generar indices aleatorios i y j usando curand
         int i = curand(&state) % data->num_cities;
         int j = curand(&state) % data->num_cities;
@@ -124,87 +80,91 @@ __global__ void kernel_simulated_annealing(TSPData *data, int *best_tours, doubl
         
         double new_cost = total_distance(data, current_tour);
         
-        // Criterio de aceptación
-        if(new_cost < current_cost || exp((current_cost - new_cost) / temp) > curand_uniform(&state)){
+        // Conocer cual es el de mejor costo a partir de los costos almacenados en el arreglo bes_cost
+        if(new_cost < current_cost || exp((current_cost - new_cost) / temp) > curand_uniform(&state))
+        {
             current_cost = new_cost;
-            // Actualizar mejor tour
-            for(int k = 0; k < data->num_cities; k++) {
-                best_tours[tid * data->num_cities + k] = current_tour[k];
+            for(int k = 0; k < data->num_cities; k++) 
+            {
+                best_tours[idHilo * data->num_cities + k] = current_tour[k]; // en vez de best_tour[k], se calcula el indice a partir del id del hilo
             }
-            best_costs[tid] = current_cost;
-        } else {
-            swap(&current_tour[i], &current_tour[j]); // revertir
+            best_costs[idHilo] = current_cost;
+        } 
+        else 
+        {
+            swap(&current_tour[i], &current_tour[j]); // revert
         }
-        
         temp *= alpha;
     }
 }
 
-void simulated_annealing(TSPData *data, int *best_tour) {
+
+
+void simulated_annealing(TSPData *data, int *best_tour) 
+{
     // Calcular el numero de hilos a ocupar
-    // Sacar propiedades del dispositivo
-    cudaDeviceProp propiedades;
+    cudaDeviceProp propiedades; // sacar propiedades del dispositivo
     cudaGetDeviceProperties (&propiedades,0);
     int num_threads= propiedades.maxThreadsPerBlock; // calcular tamaño optimo del bloque
-    // int tam_bloque= 1024; // para el ejercicio de medir tiempos de ejecucion
-    int num_blocks= (MAX_CITIES+num_threads-1) / num_threads; // calcular el numero de bloques ; N es el numero de datos (en este caso el tamaño de la matriz), la formula es universal
+    int num_blocks= (MAX_CITIES+num_threads-1) / num_threads; // calcular el numero de bloques ; N es el numero de datos (en este caso el tamaño de las ciudades), la formula es universal
     // Si se quiere saber el numero de hilos maximo se multiplica tam_bloque*numero_bloques
-
-
-
-
-
 
     
     // Reservar memoria en el dispositivo
     TSPData *d_data;
     int *d_best_tours;
     double *d_best_costs;
+    int max_iter = 100000;
     
     cudaMalloc(&d_data, sizeof(TSPData));
     cudaMalloc(&d_best_tours, num_threads * data->num_cities * sizeof(int));
     cudaMalloc(&d_best_costs, num_threads * sizeof(double));
     
-    // Copiar datos al dispositivo
+    // Copiar datos del host al dispositivo
     cudaMemcpy(d_data, data, sizeof(TSPData), cudaMemcpyHostToDevice);
     
     // Lanzar kernel
-    unsigned long seed = time(NULL);
-    kernel_simulated_annealing<<<num_blocks, num_threads>>>(d_data, d_best_tours, d_best_costs, 100000, seed);
+    unsigned long seed= time(NULL); // semilla utilizando la hora para utilizar con curand 
+    kernel_simulated_annealing<<<num_blocks, num_threads>>>(d_data, d_best_tours, d_best_costs, max_iter, seed);
     
-    // Copiar resultados de vuelta al host
+    // Copiar datos del dispositivo al host
     int *host_best_tours = (int*)malloc(num_threads * data->num_cities * sizeof(int));
     double *host_best_costs = (double*)malloc(num_threads * sizeof(double));
-    
     cudaMemcpy(host_best_tours, d_best_tours, num_threads * data->num_cities * sizeof(int), cudaMemcpyDeviceToHost);
     cudaMemcpy(host_best_costs, d_best_costs, num_threads * sizeof(double), cudaMemcpyDeviceToHost);
     
-    // Encontrar el mejor tour entre todos los hilos
-    double min_cost = host_best_costs[0];
-    int best_thread = 0;
-    for(int i = 1; i < num_threads; i++) {
-        if(host_best_costs[i] < min_cost) {
-            min_cost = host_best_costs[i];
-            best_thread = i;
+
+    // Encontrar el mejor tour entre todos los hilos (ya en el host)
+    double min_cost= host_best_costs[0]; // se dira que el primer valor es el mejor (de inicio)
+    int best_thread= 0; // se dira que el hilo que tuvo el mejor tour sera el 0 (de inicio)
+    for(int i=1; i<num_threads; i++) 
+    {
+        if(host_best_costs[i] < min_cost) // si el elemento actual es menor al de menor costo (previo)
+        {
+            min_cost= host_best_costs[i];
+            best_thread= i; // se obtiene que hilo fue el de menor costo para poder imprimir su tour despues
         }
     }
-    
     // Copiar el mejor tour al resultado
-    for(int i = 0; i < data->num_cities; i++) {
-        best_tour[i] = host_best_tours[best_thread * data->num_cities + i];
+    for(int i=0; i<data->num_cities; i++) 
+    {
+        best_tour[i]= host_best_tours[best_thread * data->num_cities + i]; // de todos los tours se obtiene el mejor dependiendo de que hilo fue 
     }
     
     printf("Costo final: %.2f\n", min_cost);
-    
-    // Liberar memoria
+
+    // Liberar memoria 
+    // Host
     free(host_best_tours);
     free(host_best_costs);
+    // Dispositivo
     cudaFree(d_data);
     cudaFree(d_best_tours);
     cudaFree(d_best_costs);
 }
 
-int main() {
+int main() 
+{
     srand(time(NULL));
     TSPData data;
     FILE *fp = fopen("berlin52.tsp", "r");
