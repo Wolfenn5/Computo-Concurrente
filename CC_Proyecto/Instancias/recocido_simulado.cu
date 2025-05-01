@@ -123,10 +123,21 @@ void simulated_annealing(TSPData *data, int *best_tour)
     // Copiar datos del host al dispositivo
     cudaMemcpy(d_data, data, sizeof(TSPData), cudaMemcpyHostToDevice);
     
+    // Medir tiempo del dispositivo (GPU) usando eventos de cuda
+    cudaEvent_t inicio, fin; // vendria siendo el equivalente a clock_t 
+    // se declaran variables que van a ser eventos
+    cudaEventCreate(&inicio);
+    cudaEventCreate(&fin);
+
     // Lanzar kernel
     unsigned long seed= time(NULL); // semilla utilizando la hora para utilizar con curand 
+    cudaEventRecord(inicio); // se marca en donde va a empezar a medir el tiempo de GPU que es cuando se lanza el kernel para empezar a hacer calculos
     kernel_simulated_annealing<<<num_blocks, num_threads>>>(d_data, d_best_tours, d_best_costs, max_iter, seed);
+    cudaEventRecord(fin); // se marca en donde va a terminar de medirse el tiempo de GPU que es cuando el kernel ya acabo
     
+    // Esperar a que los hilos de la GPU terminen
+    cudaDeviceSynchronize(); // es el equivalente a .join en hilos. Es importante utilizarlo para no trabar la GPU
+
     // Copiar datos del dispositivo al host
     int *host_best_tours = (int*)malloc(num_threads * data->num_cities * sizeof(int));
     double *host_best_costs = (double*)malloc(num_threads * sizeof(double));
@@ -151,8 +162,13 @@ void simulated_annealing(TSPData *data, int *best_tour)
         best_tour[i]= host_best_tours[best_thread * data->num_cities + i]; // de todos los tours se obtiene el mejor dependiendo de que hilo fue 
     }
     
-    printf("Costo final: %.2f\n", min_cost);
+    // Calcular el tiempo que le tomo a la GPU hacer los calculos
+    float tiempo_GPU=0; 
+    cudaEventElapsedTime(&tiempo_GPU, inicio, fin); // se indica en donde se va a guardar, el inicio y el final. Siempre va a devolver el tiempo en milisegundos
+    printf("\nEl tiempo de ejecucion del dispositivo (GPU) fue de: %f segundos\n",tiempo_GPU/1000); // se divide tiempo/1000 para dar el tiempo en segundos en vez de milisegundos
 
+
+    printf("Costo final: %.2f\n", min_cost);
     // Liberar memoria 
     // Host
     free(host_best_tours);
@@ -167,7 +183,7 @@ int main()
 {
     srand(time(NULL));
     TSPData data;
-    FILE *fp = fopen("berlin52.tsp", "r");
+    FILE *fp = fopen("eil101.tsp", "r");
     if(!fp) {
         printf("No se pudo abrir el archivo.\n");
         return 1;

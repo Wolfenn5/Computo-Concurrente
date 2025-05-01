@@ -91,7 +91,11 @@ int main(){
     fclose(fp);
 
     int best_tour[MAX_CITIES];
+    clock_t inicio = clock();
     simulated_annealing(&data, best_tour);
+    clock_t fin = clock();
+    double tiempo_segundos = (double)(fin - inicio) / CLOCKS_PER_SEC;
+    printf("Tiempo de ejecucion: %.4f segundos\n", tiempo_segundos);
 
     printf("Tour final:\n");
     for (int i = 0; i < data.num_cities; i++)
