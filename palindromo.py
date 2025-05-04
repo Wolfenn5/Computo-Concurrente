@@ -116,7 +116,7 @@ def maquina_turing(cinta_inicial):
 
 
 
-cadena= "110011"
+cadena= "0110"
 
 
 
