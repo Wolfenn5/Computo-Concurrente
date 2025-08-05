@@ -1,5 +1,14 @@
 #include <stdio.h>
 
+/* 
+Para compilar se utiliza nvcc de la siguiente forma:
+
+nvcc hola_mundo_cuda.cu -o hola_cuda
+
+./hola_cuda
+*/
+
+
 /* de momento este programa es paralelo */
 
 // se va a trabajar con 9 hilos
